@@ -33,7 +33,7 @@ define(function(require, exports, module) {
         require([
           extensionDirectory + '/perspectiveUI.js',
           "text!" + extensionDirectory + '/toolbar.html',
-          extensionDirectory + '/datatables/natural.js',
+          extensionDirectory + '/libs/natural.js',
         ], function(extUI, toolbarTPL) {
 
           var toolbarTemplate = Handlebars.compile(toolbarTPL);
