@@ -9,6 +9,7 @@ define(function(require, exports, module) {
 
   var TSCORE = require("tscore");
   var TSPOSTIO = require("tspostioapi");
+  var saveAs = require("libs/FileSaver.js/FileSaver.min");
 
   var TMB_SIZES = ["100px", "200px", "300px", "400px", "500px"];
   var supportedFileTypeThumnailing = ['jpg', 'jpeg', 'png', 'gif'];
@@ -335,15 +336,14 @@ define(function(require, exports, module) {
         self.selectFile(titleBut, $(titleBut).attr("filepath"));
       });
 
-    if (isCordova) {
-      this.fileTable.$('tr')
-        .hammer().on("doubletap", function() {
+    //if (isCordova) {
+      this.fileTable.$('tr').hammer().on("doubletap", function() {
           console.log("Doubletap & Opening file...");
           var titleBut = $(this).find(".fileTitleButton");
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
           self.selectFile(titleBut, $(titleBut).attr("filepath"));
         });
-    } else {
+    /*} else {
       this.fileTable.$('tr')
         .on("dblclick", function() {
           console.log("Doubletap -> Opening file...");
@@ -351,7 +351,7 @@ define(function(require, exports, module) {
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
           self.selectFile(titleBut, $(titleBut).attr("filepath"));
         });
-    }
+    }*/
 
     this.fileTable.$('.fileTitleButton')
       //.on('click', function(e) { e.preventDefault(); return false; })
