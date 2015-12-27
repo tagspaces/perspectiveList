@@ -39,36 +39,40 @@ define(function(require, exports, module) {
           UI = new extUI.ExtUI(extensionID);
           UI.buildUI(toolbarTemplate);
 
-          // TODO refactor translations
-          var translation = $.i18n.t("ns.perspectiveList:fileExtension");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
+          try {
+            // TODO refactor translations
+            var translation = $.i18n.t("ns.perspectiveList:fileExtension");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:fileTitle");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:fileTags");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:fileSize");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:fileLDTM");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:filePath");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
+            }
+            translation = $.i18n.t("ns.perspectiveList:fileName");
+            if (translation.length > 0) {
+              $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
+            }
+            $('#' + extensionID + 'Container [data-i18n]').i18n();
+          } catch(err) {
+            console.log("Translating extension failed.");
           }
-          translation = $.i18n.t("ns.perspectiveList:fileTitle");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectiveList:fileTags");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectiveList:fileSize");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectiveList:fileLDTM");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectiveList:filePath");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectiveList:fileName");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
-          }
-          $('#' + extensionID + 'Container [data-i18n]').i18n();
 
           if (isCordova) {
             TSCORE.reLayout();
@@ -97,6 +101,8 @@ define(function(require, exports, module) {
     console.log("Loading perspective " + extensionID);
     extensionLoaded.then(function() {
       UI.reInit();
+    }, function(err) {
+      console.warn("Loading extension failed: " + err);
     });
   };
 
