@@ -70,7 +70,7 @@ define(function(require, exports, module) {
               $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
             }
             $('#' + extensionID + 'Container [data-i18n]').i18n();
-          } catch(err) {
+          } catch (err) {
             console.log("Translating extension failed.");
           }
 
