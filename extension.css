@@ -53,7 +53,7 @@ table.dataTable tr.odd {
     background-color: white;
 }
 
-.activeRow { background: #FFCC99 !important; }
+.activeRow { background: rgba(29, 209, 159, 0.52) !important; }
 
 table.dataTable tr.ui-selected {
     color: white;
