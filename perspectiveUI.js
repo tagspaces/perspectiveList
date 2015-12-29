@@ -64,7 +64,7 @@ define(function(require, exports, module) {
         $("#" + self.extensionID + "IncludeSubDirsButton").prop('disabled', true);
         TSCORE.IO.createDirectoryIndex(TSCORE.currentPath);
       }*/
-      TSCORE.Utils.createDirectoryIndex(TSCORE.currentPath);
+      TSCORE.IOUtils.createDirectoryIndex(TSCORE.currentPath);
     });
 
     $("#" + this.extensionID + "DeleteSelectedFilesButton").on("click", function() {
@@ -80,15 +80,7 @@ define(function(require, exports, module) {
         $.i18n.t(dlgConfirmMsgId, {
           selectedFiles:  selFiles.toString()
         }), function() {
-          TSCORE.selectedFiles.forEach(function(path) {
-            TSCORE.IO.deleteFilePromise(path).then(function() {
-              TSPOSTIO.deleteElement(path);
-            }, function(error) {
-              TSCORE.hideLoadingAnimation();
-              TSCORE.showAlertDialog("Deleting file " + path + " failed.");
-              console.error("Deleting file " + path + " failed " + error);
-            });
-          });
+          TSCORE.IOUtils.deleteFiles(TSCORE.selectedFiles);
         });
     });
 
