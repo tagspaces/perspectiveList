@@ -397,7 +397,7 @@ define(function(require, exports, module) {
     $("#" + this.extensionID + "TagButton").prop('disabled', true);
     $("#" + this.extensionID + "CopyMoveButton").prop('disabled', true);
 
-    //Update statusbar
+    //Update statusbar, TODO make an core.ui api call for statusbar updates
     if (this.searchResults.length !== undefined) {
       if (TSCORE.Search.nextQuery.length > 0) {
         $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectiveList:filesFoundFor") + " '" + TSCORE.Search.nextQuery + "'");
