@@ -5,13 +5,9 @@
 define(function(require, exports, module) {
   "use strict";
 
-  var extensionTitle = "List";
+  var extensionTitle = "List"; // should be equal to the name in the bower.json
   var extensionID = "perspectiveList"; // ID should be equal to the directory name where the ext. is located   
-  var extensionType = "perspective";
-  var extensionIcon = "fa fa-list-ul";
-  var extensionVersion = "1.0";
-  var extensionManifestVersion = 1;
-  var extensionLicense = "AGPL";
+  var extensionIcon = "fa fa-list-ul"; // icon class from font awesome
 
   console.log("Loading " + extensionID);
 
@@ -132,11 +128,7 @@ define(function(require, exports, module) {
   // Vars
   exports.Title = extensionTitle;
   exports.ID = extensionID;
-  exports.Type = extensionType;
   exports.Icon = extensionIcon;
-  exports.Version = extensionVersion;
-  exports.ManifestVersion = extensionManifestVersion;
-  exports.License = extensionLicense;
 
   // Methods
   exports.init = init;

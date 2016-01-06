@@ -1,5 +1,5 @@
 {
-  "name": "perspectiveList",
+  "name": "List",
   "id": "perspectiveList",
   "description": "A TagSpaces perspective extension allowing you to view your files in list. It is optimized for performing file management operation.",
   "type": "perspective",
