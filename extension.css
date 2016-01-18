@@ -9,21 +9,6 @@ table .fileTitle {
     padding-left: 0 !important;
 }
 
-.tagButton .caret, .extTagButton .caret {
-    border-top-color: white !important;
-}
-
-.tagButton {
-    padding: 2px 4px 2px 4px !important;
-    background: #008000 !important;
-    color: white !important;
-    margin: 1px;
-    border: 0;
-    z-index: 9999;
-    border-radius: 5px !important;
-    text-decoration: none  !important;
-}
-
 .extTagButton {
     padding: 2px 4px 2px 4px;
     background: #bbb !important;
