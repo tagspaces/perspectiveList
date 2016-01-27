@@ -68,6 +68,8 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "DeleteSelectedFilesButton").on("click", function() {
+      if ($(this).prop('disabled')) { return false; }
+
       var selFiles = " ";
       TSCORE.selectedFiles.forEach(function(file) {
         selFiles += " " + TSCORE.Utils.baseName(file) + " ,";
@@ -86,18 +88,22 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "TagButton").on("click", function() {
+      if ($(this).prop('disabled')) { return false; }
       TSCORE.showAddTagsDialog();
     });
 
     $("#" + this.extensionID + "CopyMoveButton").on("click", function() {
+      if ($(this).prop('disabled')) { return false; }
       TSCORE.showMoveCopyFilesDialog();
     });
 
     $("#" + this.extensionID + "ShowFileDetailsButton").on("click", function() {
+      if ($(this).prop('disabled')) { return false; }
       self.toggleFileDetails();
     });
 
     $("#" + this.extensionID + "ShowTagsButton").on("click", function() {
+      if ($(this).prop('disabled')) { return false; }
       self.toggleTags();
     });
 
@@ -135,6 +141,12 @@ define(function(require, exports, module) {
 
     $("#" + this.extensionID + "AddFileButton").on("click", function() {
       $("#addFileInput").click();
+    });
+
+    $("#" + this.extensionID + "MainDropUp").dropdown();
+    $("#" + this.extensionID + "MainDropUp").on('show.bs.dropdown', function() {
+      alert("hi");
+      TSCORE.hideAllDropDownMenus();
     });
 
     // Disabling all buttons by no data
