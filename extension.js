@@ -128,6 +128,11 @@ define(function(require, exports, module) {
     return UI.getPrevFile(filePath);
   }
 
+  function updateTreeData(fsTreeData) {
+
+    console.log("Updating tree data not implemented");
+  }
+
   // API Vars
   exports.Title = extensionTitle;
   exports.ID = extensionID;
@@ -141,5 +146,6 @@ define(function(require, exports, module) {
   exports.getPrevFile = getPrevFile;
   exports.removeFileUI = removeFileUI;
   exports.updateFileUI = updateFileUI;
+  exports.updateTreeData = updateTreeData;
 
 });
