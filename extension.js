@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013 The TagSpaces Authors. All rights reserved.
+/* Copyright (c) 2012-2016 The TagSpaces Authors. All rights reserved.
  * Use of this source code is governed by a AGPL3 license that
  * can be found in the LICENSE file. */
 /* global define, Handlebars  */
@@ -12,7 +12,6 @@ define(function(require, exports, module) {
   console.log("Loading " + extensionID);
 
   var TSCORE = require("tscore");
-
   var extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + extensionID;
   var UI;
   var extensionLoaded;
@@ -80,7 +79,7 @@ define(function(require, exports, module) {
     });
   }
 
-  var platformTuning = function() {
+  function platformTuning() {
     if (isCordova) {
       $('#' + extensionID + 'Export2CSVButton').hide();
     } else if (isChrome) {
@@ -91,46 +90,50 @@ define(function(require, exports, module) {
     } else if (isFirefox) {
       $('#' + extensionID + 'AddFileButton').hide(); // Current impl has 0.5mb limit
     }
-  };
+  }
 
-  var load = function() {
+  function load() {
     console.log("Loading perspective " + extensionID);
     extensionLoaded.then(function() {
       UI.reInit();
     }, function(err) {
       console.warn("Loading extension failed: " + err);
     });
-  };
+  }
 
-  var clearSelectedFiles = function() {
+  function clearSelectedFiles() {
     if (UI) {
       UI.clearSelectedFiles();
       UI.handleElementActivation();
     }
-  };
+  }
 
-  var removeFileUI = function(filePath) {
+  function removeFileUI(filePath) {
+
     UI.removeFileUI(filePath);
-  };
+  }
 
-  var updateFileUI = function(oldFilePath, newFilePath) {
+  function updateFileUI(oldFilePath, newFilePath) {
+
     UI.updateFileUI(oldFilePath, newFilePath);
-  };
+  }
 
-  var getNextFile = function(filePath) {
+  function getNextFile(filePath) {
+
     return UI.getNextFile(filePath);
-  };
+  }
 
-  var getPrevFile = function(filePath) {
+  function getPrevFile(filePath) {
+
     return UI.getPrevFile(filePath);
-  };
+  }
 
-  // Vars
+  // API Vars
   exports.Title = extensionTitle;
   exports.ID = extensionID;
   exports.Icon = extensionIcon;
 
-  // Methods
+  // API Methods
   exports.init = init;
   exports.load = load;
   exports.clearSelectedFiles = clearSelectedFiles;
