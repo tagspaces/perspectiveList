@@ -68,7 +68,7 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "DeleteSelectedFilesButton").on("click", function() {
-      if ($(this).prop('disabled')) { return false; }
+      if ($(this).parent().hasClass("disabled")) { return false; }
 
       var selFiles = " ";
       TSCORE.selectedFiles.forEach(function(file) {
@@ -88,17 +88,16 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "TagButton").on("click", function() {
-      if ($(this).prop('disabled')) { return false; }
+      if ($(this).parent().hasClass("disabled")) { return false; }
       TSCORE.showAddTagsDialog();
     });
 
     $("#" + this.extensionID + "CopyMoveButton").on("click", function() {
-      if ($(this).prop('disabled')) { return false; }
+      if ($(this).parent().hasClass("disabled")) { return false; }
       TSCORE.showMoveCopyFilesDialog();
     });
 
     $("#" + this.extensionID + "ShowFileDetailsButton").on("click", function() {
-      if ($(this).prop('disabled')) { return false; }
       self.toggleFileDetails();
     });
 
@@ -143,10 +142,9 @@ define(function(require, exports, module) {
       $("#addFileInput").click();
     });
 
-    $("#" + this.extensionID + "MainDropUp").dropdown();
-    $("#" + this.extensionID + "MainDropUp").on('show.bs.dropdown', function() {
-      alert("hi");
+    $("#" + this.extensionID + "MainDropUp").on('click', function() {
       TSCORE.hideAllDropDownMenus();
+      //$(this).dropdown('toggle');
     });
 
     // Disabling all buttons by no data
