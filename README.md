@@ -1,28 +1,32 @@
-    {
-      "name": "perspectiveList",
-      "id": "perspectiveList",
-      "description": "A TagSpaces perspective extension allowing you to view your files in list. It is optimized for performing file management operation.",
-      "type": "perspective",
-      "version": "1.0.0",
-      "dependencies": {
-        "datatables": "~1.9.4"
-      },
-      "devDependencies": {},
-      "authors": [
-        "TagSpaces Authors - http://tagspaces.org",
-        "Ilian Sapundshiev - http://ilian.me"
-      ],
-      "keywords": [
-        "file-management",
-        "list",
-        "table"
-      ],
-      "license": "",
-      "main": [
-        "extension.js"
-      ],
-      "ignore": [
-        "Gruntfile.js"
-      ],
-      "private": true
-    }
+A TagSpaces perspective allowing you to view your files in a list. It is optimized for performing file management operation.
+
+## Features
+
+* Browsing files in the current folder
+* Performing basic operations like renaming, moving, deleting, creating and tagging files
+
+## Used libraries
+This extension thankfully relays on the following great libraries:
+
+* [datatables](https://www.datatables.net/)
+
+## Installation
+
+This extensions is packaged with any new version of TagSpaces
+
+## Source code
+
+The source code of this extension is freely available on [github.com/tagspaces/perspectiveList](https://github.com/tagspaces/perspectiveList/)
+
+## Development
+
+If you want to extend this extensions, please follow our general [extension development guide](http://tagspaces.org/documentation/extension-development-guide)
+
+## Screenshots
+
+![Screenshot of the perspectiveList](http://tagspaces.org/extensions/editorHTML/perspectiveList-screenshot.png)
+
+## License
+
+[MIT](https://github.com/tagspaces/perspectiveList/blob/master/LICENSE.txt)
+

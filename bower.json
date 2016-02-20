@@ -17,7 +17,7 @@
     "list",
     "table"
   ],
-  "license": "",
+  "license": "MIT",
   "main": [
     "extension.js"
   ],
