@@ -24,7 +24,7 @@ If you want to extend this extensions, please follow our general [extension deve
 
 ## Screenshots
 
-![Screenshot of the perspectiveList](http://tagspaces.org/extensions/editorHTML/perspectiveList-screenshot.png)
+![Screenshot of the perspectiveList](http://tagspaces.org/extensions/perspectiveList/perspectiveList-screenshot.png)
 
 ## License
 
