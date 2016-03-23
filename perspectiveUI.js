@@ -46,24 +46,6 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "IncludeSubDirsButton").on("click", function() {
-      // TODO remove from all places e.g. config
-      /*if (TSCORE.Config.getShowWarningRecursiveScan()) {
-        TSCORE.showConfirmDialog(
-          $.i18n.t("ns.perspectiveList:includeSubdirsTitleConfirm"),
-          $.i18n.t("ns.perspectiveList:includeSubdirsContentConfirm"),
-          function() {
-            TSCORE.Config.setShowWarningRecursiveScan($("#confirmDialog").find("#showThisDialogAgain").prop('checked'));
-            //console.log("Shownextime : "+$("#confirmDialog").find("#showThisDialogAgain").prop('checked'));
-            $("#" + self.extensionID + "IncludeSubDirsButton").prop('disabled', true);
-            TSCORE.IO.createDirectoryIndex(TSCORE.currentPath);
-          },
-          function() {},
-          TSCORE.Config.getShowWarningRecursiveScan()
-        );
-      } else {
-        $("#" + self.extensionID + "IncludeSubDirsButton").prop('disabled', true);
-        TSCORE.IO.createDirectoryIndex(TSCORE.currentPath);
-      }*/
       TSCORE.IOUtils.createDirectoryIndex(TSCORE.currentPath);
     });
 
@@ -97,21 +79,11 @@ define(function(require, exports, module) {
       TSCORE.showMoveCopyFilesDialog();
     });
 
-    $("#" + this.extensionID + "ShowFileDetailsButton").on("click", function() {
-      self.toggleFileDetails();
-    });
-
-    $("#" + this.extensionID + "ShowTagsButton").on("click", function() {
-      if ($(this).prop('disabled')) { return false; }
-      self.toggleTags();
-    });
-
     $("#" + this.extensionID + "Export2CSVButton").on("click", function() {
       var blob = new Blob([TSCORE.exportFileListCSV(TSCORE.fileList)], {
         type: "text/csv;charset=utf-8"
       });
       saveAs(blob, "Export.csv");
-      //console.log("Export data: "+TSCORE.exportFileListCSV(TSCORE.fileList));
     });
 
     $("#" + this.extensionID + "ReloadFolderButton").on("click", function() {
@@ -163,7 +135,7 @@ define(function(require, exports, module) {
       return false;
     });
 
-    // Init Tag Context Menu               
+    // Init Tag Context Menu
     this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
@@ -195,79 +167,46 @@ define(function(require, exports, module) {
       "oLanguage": {
         "sEmptyTable": " " // No files found
       },
-      "aoColumns": [{
-        "sTitle": "File Ext.",
-        "sClass": "fileTitle noWrap"
-      }, {
-        "sTitle": "Title",
-        "sClass": "fileTitle forceWrap"
-      }, {
-        "sTitle": "Tags",
-        "sClass": "fileTitle"
-      }, {
-        "sTitle": "Size",
-        "sClass": "fileTitle"
-      }, {
-        "sTitle": "Last Modified",
-        "sClass": "fileTitle"
-      }, {
-        "sTitle": "File Path",
-        "sClass": "fileTitle"
-      }, {
-        "sTitle": "File Name",
-        "sClass": "fileTitle forceWrap"
-      }],
+      "aoColumns": [
+        {
+          "sType": 'natural',
+          "sTitle": "File Ext.",
+          "sClass": "fileTitle noWrap",
+          "mRender": function(data, type, row) {
+            return self.buttonizeTitle(row.title, row.path, row.extension);
+          },
+          "mData": "extension",
+        }, {
+          "sTitle": "Title",
+          "sClass": "fileTitle forceWrap",
+          "mData": "title",
+        }, {
+          "sTitle": "Tags",
+          "sClass": "fileTitle",
+          "mRender": function(data, type, row) {
+            return TSCORE.generateTagButtons(data, row.path);
+          },
+          "mData": "tags",
+        }, {
+          "sType": 'numeric',
+          "sTitle": "Size",
+          "sClass": "fileTitle",
+          "mData": "size",
+          "mRender": function(data, type, row) {
+            return TSCORE.TagUtils.formatFileSize(data, true);
+          }
+        }, {
+          "sTitle": "Last Modified",
+          "sClass": "fileTitle",
+          "mRender": function(data) {
+            return TSCORE.TagUtils.formatDateTime(data, true); // moment(data).fromNow();
+          },
+          "mData": "lmdt",
+        },
+      ],
       "aaSorting": [
         [1, "asc"]
       ], // default sorting by filename
-      "aoColumnDefs": [{ // File title
-        sType: 'natural',
-        aTargets: [TSCORE.fileListTITLE]
-      }, { // File extension column
-        "mRender": function(data, type, row) {
-          return self.buttonizeTitle(row[TSCORE.fileListTITLE], row[TSCORE.fileListFILEPATH], row[TSCORE.fileListFILEEXT]);
-        },
-        "aTargets": [TSCORE.fileListFILEEXT]
-      }, { // Tags column
-        "mRender": function(data, type, row) {
-          return TSCORE.generateTagButtons(data, row[TSCORE.fileListFILEPATH]);
-        },
-        "aTargets": [TSCORE.fileListTAGS]
-      }, { // Filesize column
-        "sType": 'numeric',
-        "aTargets": [TSCORE.fileListFILESIZE],
-        "mRender": function(data, type, row) {
-          return TSCORE.TagUtils.formatFileSize(data, true);
-        }
-      }, { // Last changed date column
-        "mRender": function(data) {
-          return TSCORE.TagUtils.formatDateTime(data, true); // moment(data).fromNow();
-        },
-        "aTargets": [TSCORE.fileListFILELMDT]
-      }, { // Filename column
-        "mRender": function(data) {
-          return data;
-        },
-        "aTargets": [TSCORE.fileListFILENAME]
-      }, {
-        "bVisible": false,
-        "aTargets": [
-          //TSCORE.fileListFILESIZE,
-          //TSCORE.fileListFILELMDT,
-          TSCORE.fileListFILEPATH,
-          TSCORE.fileListFILENAME
-        ]
-      }, {
-        "bSearchable": false,
-        "aTargets": [
-          TSCORE.fileListTITLE,
-          TSCORE.fileListFILEEXT,
-          TSCORE.fileListTAGS,
-          TSCORE.fileListFILESIZE,
-          TSCORE.fileListFILELMDT,
-          TSCORE.fileListFILEPATH
-        ]
-      }]
     });
 
     /*
@@ -403,7 +342,7 @@ define(function(require, exports, module) {
 
     // Enable all buttons
     this.viewToolbar.find(".btn").prop('disabled', false);
-    // Disable certain buttons again	
+    // Disable certain buttons again
     $("#" + this.extensionID + "IncreaseThumbsButton").prop('disabled', true);
     $("#" + this.extensionID + "TagButton").prop('disabled', true);
     $("#" + this.extensionID + "CopyMoveButton").prop('disabled', true);
@@ -439,7 +378,7 @@ define(function(require, exports, module) {
       title = filePath;
     }
 
-    //TODO minimize platform specific calls     
+    //TODO minimize platform specific calls
     var tmbPath;
     if (isCordova || isWeb) {
       tmbPath = filePath;
@@ -454,12 +393,7 @@ define(function(require, exports, module) {
       selected: isSelected ? "fa-check-square-o" : "fa-square-o"
     };
 
-    // Disabling thumb suport
-    //if (supportedFileTypeThumnailing.indexOf(fileExt) >= 0) {
-    //  return buttonCompTmbTmpl(context);
-    //} else {
     return buttonCompTmpl(context);
-    //}
   };
 
   ExtUI.prototype.clearSelectedFiles = function() {
@@ -495,25 +429,6 @@ define(function(require, exports, module) {
     });
   };
 
-  ExtUI.prototype.toggleFileDetails = function() {
-    if (this.showFileDetails) {
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILESIZE, false);
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILELMDT, false);
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILEPATH, false);
-    } else {
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILESIZE, true);
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILELMDT, true);
-      this.fileTable.fnSetColumnVis(TSCORE.fileListFILEPATH, true);
-    }
-
-    $("#" + this.extensionID + "Container").find("th:contains('Size')").text($.i18n.t("ns.perspectiveList:fileSize"));
-    $("#" + this.extensionID + "Container").find("th:contains('Last Modified')").text($.i18n.t("ns.perspectiveList:fileLDTM"));
-    $("#" + this.extensionID + "Container").find("th:contains('File Path')").text($.i18n.t("ns.perspectiveList:filePath"));
-    $("#" + this.extensionID + "Container").find("th:contains('File Name')").text($.i18n.t("ns.perspectiveList:fileName"));
-
-    this.showFileDetails = !this.showFileDetails;
-  };
-
   ExtUI.prototype.enableThumbnails = function() {
     $("#" + this.extensionID + "IncreaseThumbsButton").prop('disabled', false);
     $.each(this.fileTable.$('.thumbImg'), function() {
@@ -547,21 +462,12 @@ define(function(require, exports, module) {
     this.refreshThumbnails();
   };
 
-  ExtUI.prototype.toggleTags = function() {
-    if (this.showTags) {
-      this.fileTable.fnSetColumnVis(TSCORE.fileListTAGS, false);
-    } else {
-      this.fileTable.fnSetColumnVis(TSCORE.fileListTAGS, true);
-    }
-    this.showTags = !this.showTags;
-  };
-
   ExtUI.prototype.handleElementActivation = function() {
     console.log("Entering element activation handler...");
 
     var tagButton = $("#" + this.extensionID + "TagButton");
     var copyMoveButton = $("#" + this.extensionID + "CopyMoveButton");
-    var deleteSelectedFilesButton = $("#" + this.extensionID + "DeleteSelectedFilesButton"); 
+    var deleteSelectedFilesButton = $("#" + this.extensionID + "DeleteSelectedFilesButton");
 
     if (TSCORE.selectedFiles.length >= 1) {
       tagButton.parent().removeClass("disabled");
@@ -604,7 +510,7 @@ define(function(require, exports, module) {
       TSCORE.selectedFiles.splice(TSCORE.selectedFiles.indexOf(oldFilePath), 1);
       TSCORE.selectedFiles.push(newFilePath);
     }
-    
+
     var title = TSCORE.TagUtils.extractTitle(newFilePath),
       fileExt = TSCORE.TagUtils.extractFileExtension(newFilePath),
       fileTags = TSCORE.TagUtils.extractTags(newFilePath);
@@ -676,15 +582,15 @@ define(function(require, exports, module) {
     var nextFilePath;
     var self = this;
     this.searchResults.forEach(function(entry, index) {
-      if (entry[TSCORE.fileListFILEPATH] === filePath) {
+      if (entry.path === filePath) {
         var nextIndex = index + 1;
         if (nextIndex < self.searchResults.length) {
-          nextFilePath = self.searchResults[nextIndex][TSCORE.fileListFILEPATH];
+          nextFilePath = self.searchResults[nextIndex].path;
         } else {
-          nextFilePath = self.searchResults[0][TSCORE.fileListFILEPATH];
+          nextFilePath = self.searchResults[0].path;
         }
       }
-      console.log("Path: " + entry[TSCORE.fileListFILEPATH]);
+      console.log("Path: " + entry.path);
     });
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Next file: " + nextFilePath);
@@ -695,15 +601,15 @@ define(function(require, exports, module) {
     var prevFilePath;
     var self = this;
     this.searchResults.forEach(function(entry, index) {
-      if (entry[TSCORE.fileListFILEPATH] === filePath) {
+      if (entry.path === filePath) {
         var prevIndex = index - 1;
         if (prevIndex >= 0) {
-          prevFilePath = self.searchResults[prevIndex][TSCORE.fileListFILEPATH];
+          prevFilePath = self.searchResults[prevIndex].path;
         } else {
-          prevFilePath = self.searchResults[self.searchResults.length - 1][TSCORE.fileListFILEPATH];
+          prevFilePath = self.searchResults[self.searchResults.length - 1].path;
         }
       }
-      console.log("Path: " + entry[TSCORE.fileListFILEPATH]);
+      console.log("Path: " + entry.path);
     });
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Prev file: " + prevFilePath);
