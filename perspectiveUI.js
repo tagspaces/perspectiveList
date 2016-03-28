@@ -146,13 +146,22 @@ define(function(require, exports, module) {
     });
 
     this.viewContainer.append($("<table>", {
-      cellpadding: "0",
-      cellspacing: "0",
-      border: "0",
       style: "width: 100%",
       class: "table content disableTextSelection",
       id: this.extensionID + "FileTable"
     }));
+
+    this.viewContainer.append($("<div>", {
+      style: "width: 100%; text-align: center; display: none;",
+    }).append($("<button>", {
+      style: "text-align: center; margin-bottom: 10px;",
+      class: "btn btn-primary",
+      text: "Show all files",
+      title: "If you are trying to open more then 1000 files, TagSpaces may experience performance issues.",
+      id: this.extensionID + "ShowAllResults"
+    }).on("click", function() {
+      self.reInit(true);
+    })));
 
     this.fileTable = $('#' + this.extensionID + "FileTable").dataTable({
       "bStateSave": true,
@@ -234,12 +243,25 @@ define(function(require, exports, module) {
     this.fileTable.dataTableExt.sErrMode = 'throw';
   };
 
-  ExtUI.prototype.reInit = function() {
+  ExtUI.prototype.reInit = function(showAllResult) {
     // Clearing old data
     this.fileTable.fnClearTable();
 
-    // Load new filtered data
-    this.searchResults = TSCORE.Search.searchData(TSCORE.fileList, TSCORE.Search.nextQuery);
+    if (showAllResult && this.partialResult && this.partialResult.length > 0) {
+      this.searchResults = this.allResults;
+      this.partialResult = [];
+      $("#" + this.extensionID + "ShowAllResults").parent().hide();
+    } else {
+      this.allResults = TSCORE.Search.searchData(TSCORE.fileList, TSCORE.Search.nextQuery);
+      if (this.allResults.length >= TSCORE.maxSearchResults) {
+        this.partialResult = this.allResults.slice(0, TSCORE.maxSearchResults);
+        $("#" + this.extensionID + "ShowAllResults").parent().show();
+        this.searchResults = this.partialResult;
+      } else {
+        this.searchResults = this.allResults;
+        $("#" + this.extensionID + "ShowAllResults").parent().hide();
+      }
+    }
 
     this.fileTable.fnAddData(this.searchResults);
 
