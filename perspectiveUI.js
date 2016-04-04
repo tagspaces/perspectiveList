@@ -253,8 +253,8 @@ define(function(require, exports, module) {
       $("#" + this.extensionID + "ShowAllResults").parent().hide();
     } else {
       this.allResults = TSCORE.Search.searchData(TSCORE.fileList, TSCORE.Search.nextQuery);
-      if (this.allResults.length >= TSCORE.maxSearchResults) {
-        this.partialResult = this.allResults.slice(0, TSCORE.maxSearchResults);
+      if (this.allResults.length >= TSCORE.Config.getMaxSearchResultCount()) {
+        this.partialResult = this.allResults.slice(0, TSCORE.Config.getMaxSearchResultCount());
         $("#" + this.extensionID + "ShowAllResults").parent().show();
         this.searchResults = this.partialResult;
       } else {
