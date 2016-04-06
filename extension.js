@@ -19,6 +19,8 @@ define(function(require, exports, module) {
   function init() {
     console.log("Initializing perspective " + extensionID);
 
+
+
     extensionLoaded = new Promise(function(resolve, reject) {
       require([
         "css!" + extensionDirectory + '/extension.css',
@@ -28,6 +30,7 @@ define(function(require, exports, module) {
           extensionDirectory + '/perspectiveUI.js',
           "text!" + extensionDirectory + '/toolbar.html',
           extensionDirectory + '/libs/natural.js',
+          "css!" + extensionDirectory + '/css/markdown.css',
         ], function(extUI, toolbarTPL) {
 
           var toolbarTemplate = Handlebars.compile(toolbarTPL);
@@ -65,6 +68,33 @@ define(function(require, exports, module) {
               $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
             }
             $('#' + extensionID + 'Container [data-i18n]').i18n();
+            
+            
+            var myMarkedFunk;
+            require(["marked"], function(marked) {
+              myMarkedFunk = marked;
+            });            
+            
+            //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));          
+            $('#aboutExtensionModal').on('show.bs.modal', function() {
+              $.ajax({
+                url: extensionDirectory + '/README.md',
+                type: 'GET'
+              })
+              .done(function(mdData) {
+                //console.log("DATA: " + mdData);
+                if (typeof(myMarkedFunk) != 'undefined') {
+                  $("#aboutExtensionModal .modal-body").html(myMarkedFunk(mdData));
+                } else {
+                  $("#aboutExtensionModal .modal-body").html(mdData);
+                  console.warn("marked function not found");                  
+                }  
+              })
+              .fail(function(data) {
+                console.warn("Loading file failed " + data);
+              });
+            }); 
+            
           } catch (err) {
             console.log("Translating extension failed.");
           }
