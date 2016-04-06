@@ -29,9 +29,9 @@ define(function(require, exports, module) {
         require([
           extensionDirectory + '/perspectiveUI.js',
           "text!" + extensionDirectory + '/toolbar.html',
-          extensionDirectory + '/libs/natural.js',
-          "css!" + extensionDirectory + '/css/markdown.css',
-        ], function(extUI, toolbarTPL) {
+					"marked",
+          extensionDirectory + '/libs/natural.js',                    
+        ], function(extUI, toolbarTPL, marked) {
 
           var toolbarTemplate = Handlebars.compile(toolbarTPL);
           UI = new extUI.ExtUI(extensionID);
@@ -69,12 +69,6 @@ define(function(require, exports, module) {
             }
             $('#' + extensionID + 'Container [data-i18n]').i18n();
             
-            
-            var myMarkedFunk;
-            require(["marked"], function(marked) {
-              myMarkedFunk = marked;
-            });            
-            
             //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));          
             $('#aboutExtensionModal').on('show.bs.modal', function() {
               $.ajax({
@@ -83,8 +77,8 @@ define(function(require, exports, module) {
               })
               .done(function(mdData) {
                 //console.log("DATA: " + mdData);
-                if (typeof(myMarkedFunk) != 'undefined') {
-                  $("#aboutExtensionModal .modal-body").html(myMarkedFunk(mdData));
+                if (typeof(marked) != 'undefined') {
+                  $("#aboutExtensionModal .modal-body").html(marked(mdData));
                 } else {
                   $("#aboutExtensionModal .modal-body").html(mdData);
                   console.warn("marked function not found");                  
