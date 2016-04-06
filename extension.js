@@ -78,7 +78,7 @@ define(function(require, exports, module) {
               .done(function(mdData) {
                 //console.log("DATA: " + mdData);
                 if (marked) {
-                  var modalBody = $("#aboutExtensionModal .modal-body")
+                  var modalBody = $("#aboutExtensionModal .modal-body");
                   modalBody.html(marked(mdData));
                   handleLinks(modalBody);
                 } else {
