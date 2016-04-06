@@ -63,3 +63,24 @@ table.dataTable tfoot th {
 table.dataTable tbody td {
     border-bottom: 1px solid lightgray;
 }
+
+#aboutExtensionModal img {
+  max-width: 100%;
+}
+
+#aboutExtensionModal h1 {
+  font-size: 22px;
+}
+
+#aboutExtensionModal h2 {
+  font-size: 20px;
+}
+
+#aboutExtensionModal h3 {
+  font-size: 18px;
+}
+
+#aboutExtensionModal .modal-body {
+  max-height: 500px;
+  overflow: auto;
+}

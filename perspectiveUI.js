@@ -15,6 +15,7 @@ define(function(require, exports, module) {
   var supportedFileTypeThumnailing = ['jpg', 'jpeg', 'png', 'gif'];
 
   var extensionDirectory;
+   
 
   function ExtUI(extID) {
     this.extensionID = extID;

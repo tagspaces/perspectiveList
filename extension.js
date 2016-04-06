@@ -19,6 +19,8 @@ define(function(require, exports, module) {
   function init() {
     console.log("Initializing perspective " + extensionID);
 
+
+
     extensionLoaded = new Promise(function(resolve, reject) {
       require([
         "css!" + extensionDirectory + '/extension.css',
@@ -27,8 +29,9 @@ define(function(require, exports, module) {
         require([
           extensionDirectory + '/perspectiveUI.js',
           "text!" + extensionDirectory + '/toolbar.html',
-          extensionDirectory + '/libs/natural.js',
-        ], function(extUI, toolbarTPL) {
+					"marked",
+          extensionDirectory + '/libs/natural.js',                    
+        ], function(extUI, toolbarTPL, marked) {
 
           var toolbarTemplate = Handlebars.compile(toolbarTPL);
           UI = new extUI.ExtUI(extensionID);
@@ -65,6 +68,28 @@ define(function(require, exports, module) {
               $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
             }
             $('#' + extensionID + 'Container [data-i18n]').i18n();
+            
+            //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));          
+            $('#aboutExtensionModal').on('show.bs.modal', function() {
+              $.ajax({
+                url: extensionDirectory + '/README.md',
+                type: 'GET'
+              })
+              .done(function(mdData) {
+                //console.log("DATA: " + mdData);
+                if (marked) {
+                  var modalBody = $("#aboutExtensionModal .modal-body")
+                  modalBody.html(marked(mdData));
+                  handleLinks(modalBody);
+                } else {
+                  console.log("markdown to html transformer not found");
+                }
+              })
+              .fail(function(data) {
+                console.warn("Loading file failed " + data);
+              });
+            }); 
+            
           } catch (err) {
             console.log("Translating extension failed.");
           }
@@ -75,6 +100,17 @@ define(function(require, exports, module) {
           platformTuning();
           resolve(true);
         });
+      });
+    });
+  }
+
+  function handleLinks($element) {
+    $element.find("a[href]").each(function() {
+      var currentSrc = $(this).attr("href");
+      $(this).bind('click', function(e) {
+        e.preventDefault();
+        var msg = {command: "openLinkExternally", link : currentSrc};
+        window.parent.postMessage(JSON.stringify(msg), "*");
       });
     });
   }
