@@ -118,7 +118,7 @@ define(function(require, exports, module) {
   function platformTuning() {
     if (isCordova) {
       $('#' + extensionID + 'Export2CSVButton').hide();
-      $('#' + extensionID + 'AddFileButton').hide(); // TODO tmp disabled due not working binary saving
+      //$('#' + extensionID + 'AddFileButton').hide(); // TODO tmp disabled due not working binary saving
     } else if (isChrome) {
       $('#' + extensionID + 'AddFileButton').hide();
       $('#' + extensionID + 'TagButton').hide();
