@@ -79,11 +79,23 @@
         <button class="btn" data-dismiss="modal" data-i18n="[title]ns.perspectiveList:exportToCSVTooltip" id="{{id}}Export2CSVButton">
           <i class="fa fa-share fa-lg"></i>&nbsp;<span data-i18n="ns.perspectiveList:exportToCSV"></span>
         </button>
+        
+      <div class="btn-group">
+        <div class="col-sm-12 checkbox">
+          <label for="{{id}}showFoldersInListCheckbox">
+            <input type="checkbox" id="{{id}}showFoldersInListCheckbox"/>
+            <span data-i18n="ns.perspectiveList:showFoldersInList"></span>
+          </label>
+        </div>
       </div>
+              
+      </div>
+
+           
       <div class="modal-footer">
-        <!--button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+        <button id="modal_button_ok" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
           <i class="fa fa-check fa-lg"></i>
-        </button-->
+        </button>
       </div>
     </div>
   </div>
