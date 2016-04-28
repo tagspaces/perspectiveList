@@ -170,6 +170,20 @@ define(function(require, exports, module) {
       return false;
     });      
 
+    //this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
+    this.viewContainer.on("contextmenu mousedown", ".fileTitle", function(e) {  
+      if (e.which == 3) {
+        var selEl = $(this).parent().find(".fileTitle button");
+        //console.warn("right mousedown: " + selEl.attr("filepath"));
+        e.preventDefault();
+        TSCORE.hideAllDropDownMenus();        
+        TSCORE.PerspectiveManager.clearSelectedFiles();
+        self.selectFile(selEl, selEl.attr("filepath"));
+        TSCORE.showContextMenu("#fileMenu", $(this));
+      }  
+      return false;
+    });  
+
     // Init Tag Context Menu
     this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
       e.preventDefault();
