@@ -9,6 +9,10 @@ table .fileTitle {
     padding-left: 0 !important;
 }
 
+.fileTitleWidth {
+    min-width: 110px;
+}
+
 .extTagButton {
     padding: 2px 4px 2px 4px;
     background: #bbb !important;

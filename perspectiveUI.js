@@ -171,16 +171,14 @@ define(function(require, exports, module) {
     });      
 
     //this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
-    this.viewContainer.on("contextmenu mousedown", ".fileTitle", function(e) {  
-      if (e.which == 3) {
-        var selEl = $(this).parent().find(".fileTitle button");
-        //console.warn("right mousedown: " + selEl.attr("filepath"));
-        e.preventDefault();
-        TSCORE.hideAllDropDownMenus();        
-        TSCORE.PerspectiveManager.clearSelectedFiles();
-        self.selectFile(selEl, selEl.attr("filepath"));
-        TSCORE.showContextMenu("#fileMenu", $(this));
-      }  
+    this.viewContainer.on("contextmenu", ".fileTitle", function(e) {
+      var selEl = $(this).parent().find(".fileTitle button");
+      //console.warn("right mousedown: " + selEl.attr("filepath"));
+      e.preventDefault();
+      TSCORE.hideAllDropDownMenus();
+      TSCORE.PerspectiveManager.clearSelectedFiles();
+      self.selectFile(selEl, selEl.attr("filepath"));
+      TSCORE.showContextMenu("#fileMenu", $(this));
       return false;
     });  
 
@@ -236,7 +234,7 @@ define(function(require, exports, module) {
           "mData": "extension",
         }, {
           "sTitle": "Title",
-          "sClass": "fileTitle forceWrap",
+          "sClass": "fileTitle forceWrap fileTitleWidth",
           "mData": "title",
         }, {
           "sTitle": "Tags",
