@@ -180,7 +180,7 @@ define(function(require, exports, module) {
           "mData": "title",
         }, {
           "sTitle": "Tags",
-          "sClass": "fileTitle",
+          "sClass": "fileTitle forceWrap fileTitleWidth",
           "mRender": function(data, type, row) {
             return TSCORE.generateTagButtons(data, row.path);
           },

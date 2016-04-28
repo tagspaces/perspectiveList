@@ -84,3 +84,7 @@ table.dataTable tbody td {
   max-height: 500px;
   overflow: auto;
 }
+
+.fileTitleWidth {
+    min-width: 110px;
+}
