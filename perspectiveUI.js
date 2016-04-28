@@ -156,6 +156,19 @@ define(function(require, exports, module) {
       }
       return false;
     });
+    
+    this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
+      if (e.which == 3) {
+        //console.warn("right mousedown");
+        e.preventDefault();
+        TSCORE.hideAllDropDownMenus();
+        //self.selectFile(this, $(this).attr("filepath"));
+        if (!$(this).attr("isDirectory")) {
+          TSCORE.showContextMenu("#fileMenu", $(this));
+        }
+      }  
+      return false;
+    });      
 
     // Init Tag Context Menu
     this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
