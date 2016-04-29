@@ -176,11 +176,11 @@ define(function(require, exports, module) {
           "mData": "extension",
         }, {
           "sTitle": "Title",
-          "sClass": "fileTitle forceWrap",
+          "sClass": "fileTitle forceWrap fileTitleWidth",
           "mData": "title",
         }, {
           "sTitle": "Tags",
-          "sClass": "fileTitle forceWrap fileTitleWidth",
+          "sClass": "fileTitle forceWrap",
           "mRender": function(data, type, row) {
             return TSCORE.generateTagButtons(data, row.path);
           },

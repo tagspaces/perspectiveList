@@ -86,5 +86,5 @@ table.dataTable tbody td {
 }
 
 .fileTitleWidth {
-    min-width: 110px;
+    min-width: 115px !important;
 }
