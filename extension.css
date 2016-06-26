@@ -30,6 +30,93 @@ table .fileTitle {
     z-index: 9999;
 }
 
+.fileExt {
+  background-color: inherit;
+  color: inherit;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.fileTitleButton {
+  margin: 1px;
+  padding: 1px;
+  margin-left: 5px;
+  background-color: #515151;
+  color: white;
+  border-radius: 3px;
+  /*mix-blend-mode: darken;*/
+}
+
+.fileTitleButton:hover, .fileTitleButton:active, .fileTitleButton:focus  {
+  background-color: #515151;
+  color: white;
+  border-radius: 3px;
+}
+
+.fileExtColor[data-ext="pdf"] {
+  background-color: #ff8e73 !important;
+}
+
+.fileExtColor[data-ext^="jp"],
+.fileExtColor[data-ext="bmp"],
+.fileExtColor[data-ext="svg"],
+.fileExtColor[data-ext="gif"],
+.fileExtColor[data-ext="ico"],
+.fileExtColor[data-ext="tif"],
+.fileExtColor[data-ext="webp"],
+.fileExtColor[data-ext="png"] {
+  background-color: lightgreen !important;
+}
+
+.fileExtColor[data-ext^="doc"],
+.fileExtColor[data-ext="odt"] {
+  background-color: #88c9ff !important;
+}
+
+.fileExtColor[data-ext^="wav"],
+.fileExtColor[data-ext="mp3"],
+.fileExtColor[data-ext="ogg"],
+.fileExtColor[data-ext="m4a"] {
+    background-color: #d795ff !important;
+}
+
+.fileExtColor[data-ext="avi"],
+.fileExtColor[data-ext="mp4"],
+.fileExtColor[data-ext="webm"],
+.fileExtColor[data-ext="ogv"],
+.fileExtColor[data-ext="mkv"] {
+    background-color: #ff82d9 !important;
+}
+
+.fileExtColor[data-ext^="xls"],
+.fileExtColor[data-ext="ods"] {
+    background-color: #78f457 !important;
+}
+
+.fileExtColor[data-ext^="ppt"],
+.fileExtColor[data-ext="odp"] {
+    background-color: #ff9953 !important;
+}
+
+.fileExtColor[data-ext^="js"] {
+  background-color: #d7ff78 !important;
+  color: gray !important;
+}
+
+.fileExtColor[data-ext="rar"],
+.fileExtColor[data-ext="gz"],
+.fileExtColor[data-ext="tar"],
+.fileExtColor[data-ext="tgz"],
+.fileExtColor[data-ext="7z"],
+.fileExtColor[data-ext="zip"] {
+    background-color: #ff0000 !important;
+}
+
+.fileSelection {
+  margin-left: 6px;
+}
+
 table.dataTable tr.even {
     background-color: white;
 }
@@ -38,7 +125,9 @@ table.dataTable tr.odd {
     background-color: white;
 }
 
-.activeRow { background: rgba(29, 209, 159, 0.52) !important; }
+.activeRow {
+    background: rgba(29, 209, 159, 0.52) !important;
+}
 
 table.dataTable tr.ui-selected {
     color: white;
@@ -65,24 +154,24 @@ table.dataTable tbody td {
 }
 
 #aboutExtensionModal img {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 #aboutExtensionModal h1 {
-  font-size: 22px;
+    font-size: 22px;
 }
 
 #aboutExtensionModal h2 {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 #aboutExtensionModal h3 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 #aboutExtensionModal .modal-body {
-  max-height: 500px;
-  overflow: auto;
+    max-height: 500px;
+    overflow: auto;
 }
 
 .fileTitleWidth {
