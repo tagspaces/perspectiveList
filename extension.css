@@ -34,6 +34,35 @@ table .fileTitle {
     z-index: 9999;
 }
 
+.fileExt {
+  background-color: inherit;
+  color: inherit;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.fileTitleButton {
+  margin: 1px;
+  padding: 1px;
+  margin-left: 5px;
+  background-color: #515151;
+  color: white;
+  border-radius: 3px;
+  /*mix-blend-mode: darken;*/
+}
+
+.fileTitleButton:hover, .fileTitleButton:active, .fileTitleButton:focus  {
+  background-color: #515151;
+  color: white;
+  border-radius: 3px;
+  opacity: 0.8 !important;
+}
+
+.fileSelection {
+  margin-left: 6px;
+}
+
 table.dataTable tr.even {
     background-color: white;
 }
@@ -42,7 +71,9 @@ table.dataTable tr.odd {
     background-color: white;
 }
 
-.activeRow { background: rgba(29, 209, 159, 0.52) !important; }
+.activeRow {
+    background: rgba(29, 209, 159, 0.52) !important;
+}
 
 table.dataTable tr.ui-selected {
     color: white;
@@ -69,22 +100,26 @@ table.dataTable tbody td {
 }
 
 #aboutExtensionModal img {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 #aboutExtensionModal h1 {
-  font-size: 22px;
+    font-size: 22px;
 }
 
 #aboutExtensionModal h2 {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 #aboutExtensionModal h3 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 #aboutExtensionModal .modal-body {
-  max-height: 500px;
-  overflow: auto;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.fileTitleWidth {
+    min-width: 115px !important;
 }

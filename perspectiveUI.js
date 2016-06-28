@@ -238,7 +238,7 @@ define(function(require, exports, module) {
           "mData": "title",
         }, {
           "sTitle": "Tags",
-          "sClass": "fileTitle",
+          "sClass": "fileTitle forceWrap",
           "mRender": function(data, type, row) {
             return TSCORE.generateTagButtons(data, row.path);
           },
@@ -487,12 +487,8 @@ define(function(require, exports, module) {
     TSCORE.hideLoadingAnimation();
   };
 
-  var buttonCompTmpl = Handlebars.compile('<button filepath="{{filepath}}" class="btn btn-link fileSelection {{folder}}"><i class="fa {{selected}} fa-fw fa-lg"></i></button><br>' +
-    '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton"><span class="fileExt"><span>{{fileext}}</span>&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>');
-
-  var buttonCompTmbTmpl = Handlebars.compile('<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button><br>' +
-    '<button filepath="{{filepath}}" title="{{filepath}}" class="btn btn-link fileTitleButton"><span class="fileExt"><span>{{fileext}}</span>&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>' +
-    '<br><img class="thumbImg" filepath="{{tmbpath}}" >');
+  var buttonCompTmpl = Handlebars.compile('<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button><br>' +
+    '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor" data-ext="{{fileext}}"><span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>');
 
   // Helper function user by basic and search views
   ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
