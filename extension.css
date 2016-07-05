@@ -49,6 +49,7 @@ table .fileTitle {
   background-color: #515151;
   color: white;
   border-radius: 3px;
+  opacity: 0.8 !important;
   /*mix-blend-mode: darken;*/
 }
 
@@ -56,7 +57,7 @@ table .fileTitle {
   background-color: #515151;
   color: white;
   border-radius: 3px;
-  opacity: 0.8 !important;
+  opacity: 1 !important;
 }
 
 .fileSelection {
