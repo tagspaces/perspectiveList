@@ -171,7 +171,21 @@ define(function(require, exports, module) {
   }
 
   function setReadOnly(filePath) {
-    return UI.setReadOnly(filePath);
+    $('#tagMenuEditTag').hide();
+    $('#tagTreeMenuEditTag').hide();
+    $('#tagFile').hide();
+    $('#duplicateFile').hide();
+    $('#renameFile').hide();
+    $('#addTagFileViewer').hide();
+    $('#fileMenuAddTag').hide();
+    $('#fileMenuMoveCopyFile').hide();
+    $('#fileMenuRenameFile').hide();
+    $('#editDocument').hide();
+    //$('.flexMaxWidth .editable .editable-click').off('click');
+
+    $(document).off('drop dragend dragenter dragover dragleave', function(event) {
+      event.preventDefault();
+    });
   }
 
   // API Vars
