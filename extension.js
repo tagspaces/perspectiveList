@@ -170,6 +170,10 @@ define(function(require, exports, module) {
     console.log("Updating tree data not implemented");
   }
 
+  function setReadOnly(readOnly) {
+    return UI.setReadOnly();
+  }
+
   // API Vars
   exports.Title = extensionTitle;
   exports.ID = extensionID;
@@ -184,5 +188,5 @@ define(function(require, exports, module) {
   exports.removeFileUI = removeFileUI;
   exports.updateFileUI = updateFileUI;
   exports.updateTreeData = updateTreeData;
-
+  exports.setReadOnly = setReadOnly;
 });
