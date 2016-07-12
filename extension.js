@@ -170,8 +170,8 @@ define(function(require, exports, module) {
     console.log("Updating tree data not implemented");
   }
 
-  function setReadOnly(readOnly) {
-    return UI.setReadOnly();
+  function setReadOnly(filePath) {
+    return UI.setReadOnly(filePath);
   }
 
   // API Vars
