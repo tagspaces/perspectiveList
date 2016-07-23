@@ -48,6 +48,7 @@ table .fileTitle {
   margin-left: 5px;
   background-color: #515151;
   color: white;
+  background-color: gray;
   border-radius: 3px;
   opacity: 0.8 !important;
   /*mix-blend-mode: darken;*/
