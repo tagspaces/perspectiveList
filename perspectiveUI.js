@@ -488,7 +488,8 @@ define(function(require, exports, module) {
   };
 
   var buttonCompTmpl = Handlebars.compile('<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button><br>' +
-    '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor" data-ext="{{fileext}}"><span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>');
+    '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton {{coloredExtClass}}" data-ext="{{fileext}}">' +
+    '<span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>');
 
   // Helper function user by basic and search views
   ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
@@ -507,6 +508,7 @@ define(function(require, exports, module) {
     var context = {
       filepath: filePath,
       isDirectory: isDirectory,
+      coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled()? "fileExtColor" : "",
       tmbpath: tmbPath,
       fileext: fileExt,
       folder: isDirectory ? "fa fa-folder-o" : "",
