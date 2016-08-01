@@ -508,7 +508,7 @@ define(function(require, exports, module) {
     var context = {
       filepath: filePath,
       isDirectory: isDirectory,
-      coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled()? "fileExtColor" : "",
+      coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
       tmbpath: tmbPath,
       fileext: fileExt,
       folder: isDirectory ? "fa fa-folder-o" : "",
