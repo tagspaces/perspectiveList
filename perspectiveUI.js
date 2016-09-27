@@ -157,19 +157,6 @@ define(function(require, exports, module) {
       return false;
     });
     
-    this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
-      if (e.which == 3) {
-        //console.warn("right mousedown");
-        e.preventDefault();
-        TSCORE.hideAllDropDownMenus();
-        //self.selectFile(this, $(this).attr("filepath"));
-        if (!$(this).attr("isDirectory")) {
-          TSCORE.showContextMenu("#fileMenu", $(this));
-        }
-      }  
-      return false;
-    });      
-
     //this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
     this.viewContainer.on("contextmenu", ".fileTitle", function(e) {
       var selEl = $(this).parent().find(".fileTitle button");
@@ -191,6 +178,20 @@ define(function(require, exports, module) {
       TSCORE.showContextMenu("#tagMenu", $(this));
       return false;
     });
+
+    // TODO for remove
+    /*this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
+      e.preventDefault();
+      if (e.which == 3) {
+        //console.warn("right mousedown");
+        TSCORE.hideAllDropDownMenus();
+        //self.selectFile(this, $(this).attr("filepath"));
+        if (!$(this).attr("isDirectory")) {
+          TSCORE.showContextMenu("#fileMenu", $(this));
+        }
+      }
+      return false;
+    });*/
 
     this.viewContainer.append($("<table>", {
       style: "width: 100%",
