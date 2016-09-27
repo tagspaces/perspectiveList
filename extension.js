@@ -29,7 +29,7 @@ define(function(require, exports, module) {
         require([
           extensionDirectory + '/perspectiveUI.js',
           "text!" + extensionDirectory + '/toolbar.html',
-					"marked",
+            "marked",
           extensionDirectory + '/libs/natural.js',                    
         ], function(extUI, toolbarTPL, marked) {
 
@@ -79,7 +79,7 @@ define(function(require, exports, module) {
                 //console.log("DATA: " + mdData);
                 if (marked) {
                   var modalBody = $("#aboutExtensionModal .modal-body");
-                  modalBody.html(marked(mdData, { sanitize: true }));
+                  modalBody.html(marked(mdData, {sanitize: true}));
                   handleLinks(modalBody);
                 } else {
                   console.log("markdown to html transformer not found");
