@@ -118,22 +118,6 @@ define(function(require, exports, module) {
       TSCORE.showCreateDirectoryDialog(TSCORE.currentPath);
     });
 
-    $("#" + this.extensionID + "CreateHTMLFileButton").on("click", function() {
-      TSCORE.createHTMLFile();
-    });
-
-    $("#" + this.extensionID + "CreateMDFileButton").on("click", function() {
-      TSCORE.createMDFile();
-    });
-
-    $("#" + this.extensionID + "CreateTXTFileButton").on("click", function() {
-      TSCORE.createTXTFile();
-    });
-
-    $("#" + this.extensionID + "AddFileButton").on("click", function() {
-      $("#addFileInput").click();
-    });
-
     $("#" + this.extensionID + "MainDropUp").on('click', function() {
       TSCORE.hideAllDropDownMenus();
       //$(this).dropdown('toggle');
