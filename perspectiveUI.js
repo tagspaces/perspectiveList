@@ -457,9 +457,9 @@ define(function(require, exports, module) {
     //Update statusbar, TODO make an core.ui api call for statusbar updates
     if (this.searchResults.length !== undefined) {
       if (TSCORE.Search.nextQuery.length > 0) {
-        $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectiveList:filesFoundFor") + " '" + TSCORE.Search.nextQuery + "'");
+        $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectives:filesFoundFor") + " '" + TSCORE.Search.nextQuery + "'");
       } else {
-        $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectiveList:filesFound"));
+        $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectives:filesFound"));
       }
     }
 
