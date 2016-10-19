@@ -39,31 +39,31 @@ define(function(require, exports, module) {
 
           try {
             // TODO refactor translations
-            var translation = $.i18n.t("ns.perspectiveList:fileExtension");
+            var translation = $.i18n.t("ns.perspectives:fileExtension");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:fileTitle");
+            translation = $.i18n.t("ns.perspectives:fileTitle");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:fileTags");
+            translation = $.i18n.t("ns.perspectives:fileTags");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:fileSize");
+            translation = $.i18n.t("ns.perspectives:fileSize");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:fileLDTM");
+            translation = $.i18n.t("ns.perspectives:fileLDTM");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:filePath");
+            translation = $.i18n.t("ns.perspectives:filePath");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
             }
-            translation = $.i18n.t("ns.perspectiveList:fileName");
+            translation = $.i18n.t("ns.perspectives:fileName");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
             }
