@@ -170,6 +170,24 @@ define(function(require, exports, module) {
     console.log("Updating tree data not implemented");
   }
 
+  function setReadOnly(filePath) {
+    $('#tagMenuEditTag').hide();
+    $('#tagTreeMenuEditTag').hide();
+    $('#tagFile').hide();
+    $('#duplicateFile').hide();
+    $('#renameFile').hide();
+    $('#addTagFileViewer').hide();
+    $('#fileMenuAddTag').hide();
+    $('#fileMenuMoveCopyFile').hide();
+    $('#fileMenuRenameFile').hide();
+    $('#editDocument').hide();
+    //$('.flexMaxWidth .editable .editable-click').off('click');
+
+    $(document).off('drop dragend dragenter dragover dragleave', function(event) {
+      event.preventDefault();
+    });
+  }
+
   // API Vars
   exports.Title = extensionTitle;
   exports.ID = extensionID;
@@ -184,5 +202,5 @@ define(function(require, exports, module) {
   exports.removeFileUI = removeFileUI;
   exports.updateFileUI = updateFileUI;
   exports.updateTreeData = updateTreeData;
-
+  exports.setReadOnly = setReadOnly;
 });
