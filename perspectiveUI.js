@@ -517,7 +517,7 @@ define(function(require, exports, module) {
     $(this.viewContainer).find('.fileSelection').each(function() {
       if ($(this).attr("filepath") === filePath) {
         $(this).parent().parent().toggleClass("ui-selected");
-        $(this).parent().parent().find("i").toggleClass("fa-check-square");
+        $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
         TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
       }
