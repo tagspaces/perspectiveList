@@ -134,7 +134,7 @@ define(function(require, exports, module) {
     this.viewContainer.on("contextmenu click", ".fileTitleButton", function(e) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
-      self.selectFile(this, $(this).attr("filepath"));
+      self.selectFile($(this).attr("filepath"));
       if (!$(this).attr("isDirectory")) {
         TSCORE.showContextMenu("#fileMenu", $(this));
       }
@@ -148,7 +148,7 @@ define(function(require, exports, module) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
       TSCORE.PerspectiveManager.clearSelectedFiles();
-      self.selectFile(selEl, selEl.attr("filepath"));
+      self.selectFile(selEl.attr("filepath"));
       TSCORE.showContextMenu("#fileMenu", $(this));
       return false;
     });
@@ -157,7 +157,7 @@ define(function(require, exports, module) {
     this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
-      self.selectFile(this, $(this).attr("filepath"));
+      self.selectFile($(this).attr("filepath"));
       TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
       TSCORE.showContextMenu("#tagMenu", $(this));
       return false;
@@ -375,7 +375,7 @@ define(function(require, exports, module) {
       .click(function() {
         console.log("Selecting file...");
         var titleBut = $(this).find(".fileTitleButton");
-        self.selectFile(titleBut, $(titleBut).attr("filepath"));
+        self.selectFile($(titleBut).attr("filepath"));
       });
 
     if (isCordova) {
@@ -383,7 +383,7 @@ define(function(require, exports, module) {
           console.log("Doubletap & Opening file...");
           var titleBut = $(this).find(".fileTitleButton");
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
-          self.selectFile(titleBut, $(titleBut).attr("filepath"));
+          self.selectFile($(titleBut).attr("filepath"));
         });
     } else {
       this.fileTable.$('tr')
@@ -396,7 +396,7 @@ define(function(require, exports, module) {
             TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
           }
 
-          self.selectFile(titleBut, $(titleBut).attr("filepath"));
+          self.selectFile($(titleBut).attr("filepath"));
         });
     }
 
@@ -410,7 +410,7 @@ define(function(require, exports, module) {
         "revert": true,
         "start": function() {
           console.log("Start dragging -----");
-          self.selectFile(this, $(this).attr("filepath"));
+          self.selectFile($(this).attr("filepath"));
         }
       });
 
@@ -443,7 +443,7 @@ define(function(require, exports, module) {
         "revert": true,
         "start": function() {
           TSCORE.selectedTag = $(this).attr("tag");
-          self.selectFile(this, $(this).attr("filepath"));
+          self.selectFile($(this).attr("filepath"));
         }
       });
 
@@ -511,15 +511,19 @@ define(function(require, exports, module) {
     $("#" + this.extensionID + "Container").find("tr").removeClass('ui-selected');
   };
 
-  ExtUI.prototype.selectFile = function(uiElement, filePath) {
+  ExtUI.prototype.selectFile = function(filePath) {
+    selectedIsFolderArr = [];
     TSCORE.PerspectiveManager.clearSelectedFiles();
-    $(uiElement).parent().parent().toggleClass("ui-selected");
-    $(uiElement).parent().parent().find(".fileSelection").find("i")
-      .toggleClass("fa-check-square-o")
-      .toggleClass("fa-square-o");
+    $(this.viewContainer).find('.fileSelection').each(function() {
+      if ($(this).attr("filepath") === filePath) {
+        $(this).parent().parent().toggleClass("ui-selected");
+        $(this).parent().parent().find("i").toggleClass("fa-check-square");
+        TSCORE.selectedFiles.push($(this).attr("filepath"));
+        selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
+      }
+    });
 
     TSCORE.selectedFiles.push(filePath);
-    selectedIsFolderArr[filePath] = $(uiElement).parent().parent().attr("isDirectory");
     this.handleElementActivation();
   };
 
@@ -660,7 +664,7 @@ define(function(require, exports, module) {
         "helper": "clone",
         "revert": true,
         "start": function() {
-          self.selectFile(this, $(this).attr("filepath"));
+          self.selectFile($(this).attr("filepath"));
         }
       });
 
@@ -692,7 +696,7 @@ define(function(require, exports, module) {
         "revert": true,
         "start": function() {
           TSCORE.selectedTag = $(this).attr("tag");
-          self.selectFile(this, $(this).attr("filepath"));
+          self.selectFile($(this).attr("filepath"));
         }
       });
 
