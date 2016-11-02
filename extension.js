@@ -165,6 +165,11 @@ define(function(require, exports, module) {
     return UI.getPrevFile(filePath);
   }
 
+  function selectFile(filePath) {
+
+    return UI.selectFile(filePath);
+  }
+
   function updateTreeData(fsTreeData) {
 
     console.log("Updating tree data not implemented");
@@ -193,6 +198,7 @@ define(function(require, exports, module) {
   exports.clearSelectedFiles = clearSelectedFiles;
   exports.getNextFile = getNextFile;
   exports.getPrevFile = getPrevFile;
+  exports.selectFile = selectFile;
   exports.removeFileUI = removeFileUI;
   exports.updateFileUI = updateFileUI;
   exports.updateTreeData = updateTreeData;
