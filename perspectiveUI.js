@@ -468,19 +468,25 @@ define(function(require, exports, module) {
       self.toggleSelectAll();
     });
 
-    Mousetrap.bind(['command+up', 'ctrl+up'], function(e) {
-      if (TSCORE.selectedFiles[0]) {
-        TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getPrevFile(TSCORE.FileOpener.getOpenedFilePath()));
-      }
-      return false;
-    });
-
-    Mousetrap.bind(['command+down', 'ctrl+down'], function(e) {
-      if (TSCORE.selectedFiles[0]) {
-        TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getNextFile(TSCORE.FileOpener.getOpenedFilePath()));
-      }
-      return false;
-    });
+    //Mousetrap.bind(['command+up', 'ctrl+up'], function(e) {
+    //  if (TSCORE.selectedFiles[0]) {
+    //    var titleBut = $(this).find(".fileTitleButton");
+    //    TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getPrevFile(TSCORE.FileOpener.getOpenedFilePath()));
+    //    self.selectFile(titleBut, TSCORE.PerspectiveManager.getPrevFile(TSCORE.FileOpener.getOpenedFilePath()));
+    //  } else {
+    //    TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getPrevFile(TSCORE.fileList[0]));
+    //  }
+    //  return false;
+    //});
+    //
+    //Mousetrap.bind(['command+down', 'ctrl+down'], function(e) {
+    //  if (TSCORE.selectedFiles[0]) {
+    //    var titleBut = $(this).find(".fileTitleButton");
+    //    TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getNextFile(TSCORE.FileOpener.getOpenedFilePath()));
+    //    self.selectFile(titleBut, TSCORE.PerspectiveManager.getPrevFile(TSCORE.FileOpener.getOpenedFilePath()));
+    //  }
+    //  return false;
+    //});
 
     this.refreshThumbnails();
     TSCORE.hideLoadingAnimation();
