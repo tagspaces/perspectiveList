@@ -521,8 +521,13 @@ define(function(require, exports, module) {
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
         TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
+        $("#viewContainers").animate({
+          scrollTop: $('.ui-selected').offset().top - $("#perspectiveListContainer").offset().top
+        }, 100);
       }
     });
+    console.log($(this.viewContainer));
+
 
     //TSCORE.selectedFiles.push(filePath);
     this.handleElementActivation();
