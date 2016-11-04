@@ -442,7 +442,7 @@ define(function(require, exports, module) {
         "helper": "clone",
         "revert": true,
         "start": function() {
-          TSCORE.selectedTag = $(this).attr("tag");
+          //TSCORE.selectedTag = $(this).attr("tag");
           self.selectFile($(this).attr("filepath"));
         }
       });
@@ -512,6 +512,7 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.selectFile = function(filePath) {
+    console.log(TSCORE.selectedFiles);
     selectedIsFolderArr = [];
     TSCORE.PerspectiveManager.clearSelectedFiles();
     $(this.viewContainer).find('.fileSelection').each(function() {
@@ -523,7 +524,7 @@ define(function(require, exports, module) {
       }
     });
 
-    TSCORE.selectedFiles.push(filePath);
+    //TSCORE.selectedFiles.push(filePath);
     this.handleElementActivation();
   };
 
@@ -695,7 +696,7 @@ define(function(require, exports, module) {
         "helper": "clone",
         "revert": true,
         "start": function() {
-          TSCORE.selectedTag = $(this).attr("tag");
+          //TSCORE.selectedTag = $(this).attr("tag");
           self.selectFile($(this).attr("filepath"));
         }
       });
