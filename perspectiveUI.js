@@ -512,24 +512,20 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.selectFile = function(filePath) {
-    console.log(TSCORE.selectedFiles);
     selectedIsFolderArr = [];
     TSCORE.PerspectiveManager.clearSelectedFiles();
     $(this.viewContainer).find('.fileSelection').each(function() {
       if ($(this).attr("filepath") === filePath) {
         $(this).parent().parent().toggleClass("ui-selected");
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
-        TSCORE.selectedFiles.push($(this).attr("filepath"));
+        //TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
         $("#viewContainers").animate({
           scrollTop: $('.ui-selected').offset().top - $("#perspectiveListContainer").offset().top
         }, 100);
       }
     });
-    console.log($(this.viewContainer));
-
-
-    //TSCORE.selectedFiles.push(filePath);
+    TSCORE.selectedFiles.push(filePath);
     this.handleElementActivation();
   };
 
@@ -732,6 +728,7 @@ define(function(require, exports, module) {
     var self = this;
     this.searchResults.forEach(function(entry, index) {
       if (entry.path === filePath) {
+        console.log(self.searchResults);
         var prevIndex = index - 1;
         if (prevIndex >= 0) {
           prevFilePath = self.searchResults[prevIndex].path;
