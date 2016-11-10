@@ -520,8 +520,15 @@ define(function(require, exports, module) {
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
         //TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
-        
-        if (!TSCORE.Utils.isVisibleOnScreen(this)) {
+
+        var rectangle = this.getBoundingClientRect();
+        var isVisible = (
+          rectangle.top >= 100 &&
+          rectangle.left >= 0 &&
+          rectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          rectangle.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+        if (!isVisible) {
           $("#viewContainers").animate({
             scrollTop: $('.ui-selected').offset().top - $("#perspectiveListContainer").offset().top
           }, 100);
