@@ -62,8 +62,14 @@ table .fileTitle {
 }
 
 .fileSelection {
-  margin-left: 6px;
+  margin-left: 0px;
 }
+
+.fileSelection i {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
 
 table.dataTable tr.even {
     background-color: white;

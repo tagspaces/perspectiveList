@@ -442,7 +442,7 @@ define(function(require, exports, module) {
         "helper": "clone",
         "revert": true,
         "start": function() {
-          //TSCORE.selectedTag = $(this).attr("tag");
+          TSCORE.selectedTag = $(this).attr("tag");
           self.selectFile($(this).attr("filepath"));
         }
       });
@@ -455,7 +455,7 @@ define(function(require, exports, module) {
     $("#" + this.extensionID + "CopyMoveButton").prop('disabled', true);
 
     //Update statusbar, TODO make an core.ui api call for statusbar updates
-    if (this.searchResults.length !== undefined) {
+    if (this.searchResults.length) {
       if (TSCORE.Search.nextQuery.length > 0) {
         $("#statusBar").text(this.searchResults.length + " " + $.i18n.t("ns.perspectives:filesFoundFor") + " '" + TSCORE.Search.nextQuery + "'");
       } else {
@@ -472,9 +472,10 @@ define(function(require, exports, module) {
     TSCORE.hideLoadingAnimation();
   };
 
-  var buttonCompTmpl = Handlebars.compile('<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button><br>' +
+  var buttonCompTmpl = Handlebars.compile("" +
     '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton {{coloredExtClass}}" data-ext="{{fileext}}">' +
-    '<span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button>');
+    '<span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button><br>' +
+    '<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button>');
 
   // Helper function user by basic and search views
   ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
@@ -676,6 +677,7 @@ define(function(require, exports, module) {
         "helper": "clone",
         "revert": true,
         "start": function() {
+          TSCORE.selectedTag = $(this).attr("tag");
           self.selectFile($(this).attr("filepath"));
         }
       });
