@@ -720,19 +720,21 @@ define(function(require, exports, module) {
     var nextFilePath;
     var self = this;
     var indexNonDirectory = [];
-    this.searchResults.forEach(function(entry, index) {
-      if (entry.isDirectory === false) {
-        indexNonDirectory.push(index);
+    this.searchResults.forEach(function(entry) {
+      if (!entry.isDirectory) {
+        indexNonDirectory.push(entry);
       }
+    });
+
+    indexNonDirectory.forEach(function(entry, index) {
       if (entry.path === filePath) {
         var nextIndex = index + 1;
-        if (nextIndex < self.searchResults.length && self.searchResults[nextIndex].isDirectory === false) {
-          nextFilePath = self.searchResults[nextIndex].path;
+        if (nextIndex < indexNonDirectory.length) {
+          nextFilePath = indexNonDirectory[nextIndex].path;
         } else {
-          nextFilePath = self.searchResults[indexNonDirectory[0]].path;
+          nextFilePath = indexNonDirectory[0].path;
         }
       }
-      console.log("Path: " + entry.path);
     });
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Next file: " + nextFilePath);
@@ -743,19 +745,21 @@ define(function(require, exports, module) {
     var prevFilePath;
     var self = this;
     var indexNonDirectory = [];
-    this.searchResults.forEach(function(entry, index) {
-      if (entry.isDirectory === false) {
-        indexNonDirectory.push(index);
+    this.searchResults.forEach(function(entry) {
+      if (!entry.isDirectory) {
+        indexNonDirectory.push(entry);
       }
+    });
+
+    indexNonDirectory.forEach(function(entry, index) {
       if (entry.path === filePath) {
         var prevIndex = index - 1;
-        if (prevIndex >= indexNonDirectory[0]) {
-          prevFilePath = self.searchResults[prevIndex].path;
+        if (prevIndex >= 0) {
+          prevFilePath = indexNonDirectory[prevIndex].path;
         } else {
-          prevFilePath = self.searchResults[self.searchResults.length - 1].path;
+          prevFilePath = indexNonDirectory[indexNonDirectory.length - 1].path;
         }
       }
-      console.log("Path: " + entry.path);
     });
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Prev file: " + prevFilePath);
