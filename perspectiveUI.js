@@ -18,6 +18,7 @@ define(function(require, exports, module) {
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
+  var showSortDataInList, orderBy;
   var hasFolderInList = false;
   var extSettings;
   loadExtSettings();
@@ -202,7 +203,7 @@ define(function(require, exports, module) {
       "bPaginate": false,
       "bLengthChange": false,
       "bFilter": true,
-      "bSort": true,
+      "bSort": false,
       "bInfo": false,
       "bAutoWidth": false,
       "oLanguage": {
@@ -212,18 +213,18 @@ define(function(require, exports, module) {
         {
           "sType": 'natural',
           "sTitle": "File Ext.",
-          "sClass": "fileTitle noWrap",
+          "sClass": "byExtension fileTitle noWrap",
           "mRender": function(data, type, row) {
             return self.buttonizeTitle((row.isDirectory ? row.name : row.title), row.path, row.extension, row.isDirectory);
           },
           "mData": "extension",
         }, {
           "sTitle": "Title",
-          "sClass": "fileTitle forceWrap fileTitleWidth",
+          "sClass": "byName fileTitle forceWrap fileTitleWidth",
           "mData": "title",
         }, {
           "sTitle": "Tags",
-          "sClass": "fileTitle forceWrap",
+          "sClass": "byTagCount fileTitle forceWrap",
           "mRender": function(data, type, row) {
             return TSCORE.generateTagButtons(data, row.path);
           },
@@ -231,14 +232,14 @@ define(function(require, exports, module) {
         }, {
           "sType": 'numeric',
           "sTitle": "Size",
-          "sClass": "fileTitle",
+          "sClass": "byFileSize fileTitle",
           "mData": "size",
           "mRender": function(data, type, row) {
             return TSCORE.TagUtils.formatFileSize(data, true);
           }
         }, {
           "sTitle": "Last Modified",
-          "sClass": "fileTitle",
+          "sClass": "byDateModified fileTitle",
           "mRender": function(data) {
             return TSCORE.TagUtils.formatDateTime(data, true); // moment(data).fromNow();
           },
@@ -271,11 +272,64 @@ define(function(require, exports, module) {
       return false;
     }); */
 
+
+    $(".byName").on("click", function() {
+      if (orderBy === undefined || orderBy === false) {
+        orderBy = true;
+      } else {
+        orderBy = false;
+      }
+      showSortDataInList = 'byName';
+      self.reInit();
+    });
+
+    $(".byExtension").on("click", function() {
+      if (orderBy === undefined || orderBy === false) {
+        orderBy = true;
+      } else {
+        orderBy = false;
+      }
+      showSortDataInList = 'byExtension';
+      self.reInit();
+    });
+
+    $(".byFileSize").on("click", function() {
+      if (orderBy === undefined || orderBy === false) {
+        orderBy = true;
+      } else {
+        orderBy = false;
+      }
+      showSortDataInList = 'byFileSize';
+      self.reInit();
+    });
+
+    $(".byTagCount").on("click", function() {
+      if (orderBy === undefined || orderBy === false) {
+        orderBy = true;
+      } else {
+        orderBy = false;
+      }
+      showSortDataInList = 'byTagCount';
+      self.reInit();
+    });
+
+    $(".byDateModified").on("click", function() {
+      if (orderBy === undefined || orderBy === false) {
+        orderBy = true;
+      } else {
+        orderBy = false;
+      }
+      showSortDataInList = 'byDateModified';
+      self.reInit();
+    });
+
     // Disable alerts in datatable
     this.fileTable.dataTableExt.sErrMode = 'throw';
   };
 
   ExtUI.prototype.reInit = function(showAllResult) {
+    var self = this;
+
     // Clearing old data
     this.fileTable.fnClearTable();
 
@@ -295,7 +349,6 @@ define(function(require, exports, module) {
         $("#" + this.extensionID + "ShowAllResults").parent().hide();
       }
     }
-
 
     function SortByName(a, b) {
       var aName = a.name.toLowerCase();
@@ -341,9 +394,13 @@ define(function(require, exports, module) {
       }
     }
 
-    this.fileTable.fnAddData(this.searchResults);
+    if (orderBy === undefined) {
+      self.sortByCriteria('byName', true);
+    } else {
+      self.sortByCriteria(showSortDataInList, orderBy);
+    }
 
-    var self = this;
+    this.fileTable.fnAddData(this.searchResults);
 
     this.fileTable.$('tr')
       .droppable({
@@ -719,20 +776,13 @@ define(function(require, exports, module) {
   ExtUI.prototype.getNextFile = function(filePath) {
     var nextFilePath;
     var self = this;
-    var indexNonDirectory = [];
-    this.searchResults.forEach(function(entry) {
-      if (!entry.isDirectory) {
-        indexNonDirectory.push(entry);
-      }
-    });
-
-    indexNonDirectory.forEach(function(entry, index) {
+    this.searchResults.forEach(function(entry, index) {
       if (entry.path === filePath) {
         var nextIndex = index + 1;
-        if (nextIndex < indexNonDirectory.length) {
-          nextFilePath = indexNonDirectory[nextIndex].path;
+        if (nextIndex < self.searchResults.length) {
+          nextFilePath = self.searchResults[nextIndex].path;
         } else {
-          nextFilePath = indexNonDirectory[0].path;
+          nextFilePath = self.searchResults[0].path;
         }
       }
     });
@@ -744,20 +794,14 @@ define(function(require, exports, module) {
   ExtUI.prototype.getPrevFile = function(filePath) {
     var prevFilePath;
     var self = this;
-    var indexNonDirectory = [];
-    this.searchResults.forEach(function(entry) {
-      if (!entry.isDirectory) {
-        indexNonDirectory.push(entry);
-      }
-    });
 
-    indexNonDirectory.forEach(function(entry, index) {
+    this.searchResults.forEach(function(entry, index) {
       if (entry.path === filePath) {
         var prevIndex = index - 1;
         if (prevIndex >= 0) {
-          prevFilePath = indexNonDirectory[prevIndex].path;
+          prevFilePath = self.searchResults[prevIndex].path;
         } else {
-          prevFilePath = indexNonDirectory[indexNonDirectory.length - 1].path;
+          prevFilePath = self.searchResults[self.searchResults.length - 1].path;
         }
       }
     });
@@ -786,6 +830,123 @@ define(function(require, exports, module) {
       $checkIcon.removeClass("fa fa-check-square-o").addClass("fa fa-square-o");
     }
     this.handleElementActivation();
+  };
+
+  ExtUI.prototype.sortByCriteria = function(criteria, orderBy) {
+    function sortByName(a, b) {
+      if (orderBy) {
+        return (b.isDirectory - a.isDirectory) || (a.name.toString().localeCompare(b.name));
+      } else {
+        return (b.isDirectory - a.isDirectory) || (b.name.toString().localeCompare(a.name));
+      }
+    }
+
+    function sortByIsDirectory(a, b) {
+      if (b.isDirectory && a.isDirectory) {
+        return 0;
+      }
+      //if (orderBy) {
+      return a.isDirectory && !b.isDirectory ? -1 : 1;
+      //} else {
+      //  return a.isDirectory && !b.isDirectory ? 1 : -1;
+      //}
+    }
+
+    function sortBySize(a, b) {
+      if (orderBy) {
+        return (b.isDirectory - a.isDirectory) || (a.size - b.size);
+      } else {
+        return (b.isDirectory - a.isDirectory) || (b.size - a.size);
+      }
+    }
+
+    function sortByDateModified(a, b) {
+      if (orderBy) {
+        return (b.isDirectory - a.isDirectory) || (a.lmdt - b.lmdt);
+      } else {
+        return (b.isDirectory - a.isDirectory) || (b.lmdt - a.lmdt);
+      }
+    }
+
+    function sortByExtension(a, b) {
+      if (orderBy) {
+        return (b.isDirectory - a.isDirectory) || (a.extension.toString().localeCompare(b.extension));
+      } else {
+        return (b.isDirectory - a.isDirectory) || (b.extension.toString().localeCompare(a.extension));
+      }
+    }
+
+    function sortByTagCount(a, b) {
+      if (orderBy) {
+        return (b.isDirectory - a.isDirectory) || (a.tags.length - b.tags.length);
+      } else {
+        return (b.isDirectory - a.isDirectory) || (b.tags.length - a.tags.length);
+      }
+    }
+
+    if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
+      var arrFiles = [];
+      for (var inx = 0; inx < this.searchResults.length; inx++) {
+        if (!this.searchResults[inx].isDirectory) {
+          arrFiles.push(this.searchResults[inx]);
+        }
+      }
+      arrFiles = arrFiles.sort(sortByName);
+      this.searchResults = arrFiles;
+    } else {
+      this.searchResults = this.searchResults.sort(sortByName);
+    }
+
+    switch (criteria) {
+      case "byDirectory":
+        this.searchResults = this.searchResults.sort(sortByIsDirectory);
+        //showFoldersInList = true;
+        if (showFoldersInList && this.searchResults.length > 0 && this.searchResults[0].isDirectory) { //sort by isDirectory and next by names only if in list have folders
+          hasFolderInList = true;
+          var arrFolders = [] , arrFiles = [];
+          for (var inx = 0; inx < this.searchResults.length; inx++) {
+            if (this.searchResults[inx].isDirectory) {
+              arrFolders.push(this.searchResults[inx]);
+            } else {
+              arrFiles.push(this.searchResults[inx]);
+            }
+          }
+          arrFolders = arrFolders.sort(sortByName);
+          arrFiles = arrFiles.sort(sortByName);
+          this.searchResults = arrFolders.concat(arrFiles);
+        } else {
+          if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
+            var arrFiles = [];
+            for (var inx = 0; inx < this.searchResults.length; inx++) {
+              if (!this.searchResults[inx].isDirectory) {
+                arrFiles.push(this.searchResults[inx]);
+              }
+            }
+            arrFiles = arrFiles.sort(sortByName);
+            this.searchResults = arrFiles;
+          } else {
+            this.searchResults = this.searchResults.sort(sortByName);
+          }
+        }
+        break;
+      case "byName":
+        this.searchResults = this.searchResults.sort(sortByName);
+        break;
+      case "byFileSize":
+        this.searchResults = this.searchResults.sort(sortBySize);
+        break;
+      case "byDateModified":
+        this.searchResults = this.searchResults.sort(sortByDateModified);
+        break;
+      case "byExtension":
+        this.searchResults = this.searchResults.sort(sortByExtension);
+        break;
+      case "byTagCount":
+        this.searchResults = this.searchResults.sort(sortByTagCount);
+        break;
+      default:
+        this.searchResults = this.searchResults.sort(sortByName);
+    }
   };
 
   exports.ExtUI = ExtUI;
