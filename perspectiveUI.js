@@ -48,6 +48,7 @@ define(function(require, exports, module) {
     this.showFileDetails = false;
     this.showTags = true;
     this.currentTmbSize = 0;
+    this.searchResults = [];
 
     extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + this.extensionID;
   }
