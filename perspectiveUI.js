@@ -495,6 +495,7 @@ define(function(require, exports, module) {
     this.fileTable.$('.tagButton')
       //.on('click', function(e) { e.preventDefault(); return false; })
       .draggable({
+        "zIndex": 10000,
         "cancel": false,
         "appendTo": "body",
         "helper": "clone",
@@ -730,6 +731,7 @@ define(function(require, exports, module) {
     var self = this;
     $fileRow.find('.fileTitleButton')
       .draggable({
+        "zIndex": 10000,
         "cancel": false,
         "appendTo": "body",
         "helper": "clone",
@@ -762,6 +764,7 @@ define(function(require, exports, module) {
 
     $fileRow.find('.tagButton')
       .draggable({
+        "zIndex": 10000,
         "cancel": false,
         "appendTo": "body",
         "helper": "clone",
