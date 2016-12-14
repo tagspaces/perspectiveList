@@ -18,7 +18,7 @@ define(function(require, exports, module) {
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
-  var showSortDataInList, orderBy;
+  var showSortDataInList = 'byName', orderBy = false;
   var hasFolderInList = false;
   var extSettings;
   loadExtSettings();
@@ -26,10 +26,20 @@ define(function(require, exports, module) {
   if (extSettings && extSettings.showFoldersInList) {
     showFoldersInList = extSettings.showFoldersInList;
   }
-  //save settings for perpectiveGrid
+
+  if (extSettings && extSettings.orderBy) {
+    orderBy = extSettings.orderBy;
+  }
+
+  if (extSettings && extSettings.showSortDataInList) {
+    showSortDataInList = extSettings.showSortDataInList;
+  }
+  //save settings for perpectiveList
   function saveExtSettings() {
     var settings = {
       "showFoldersInList": showFoldersInList,
+      "showSortDataInList": showSortDataInList,
+      "orderBy": orderBy
     };
     localStorage.setItem('perpectiveListSettings', JSON.stringify(settings));
   }
@@ -281,16 +291,18 @@ define(function(require, exports, module) {
         orderBy = false;
       }
       showSortDataInList = 'byName';
+      saveExtSettings();
       self.reInit();
     });
 
-    $(".byExtension").on("click", function() {
+    this.viewContainer.on("click", ".byExtension", function() {
       if (orderBy === undefined || orderBy === false) {
         orderBy = true;
       } else {
         orderBy = false;
       }
       showSortDataInList = 'byExtension';
+      saveExtSettings();
       self.reInit();
     });
 
@@ -300,7 +312,7 @@ define(function(require, exports, module) {
       } else {
         orderBy = false;
       }
-      showSortDataInList = 'byFileSize';
+      saveExtSettings();
       self.reInit();
     });
 
@@ -311,6 +323,7 @@ define(function(require, exports, module) {
         orderBy = false;
       }
       showSortDataInList = 'byTagCount';
+      saveExtSettings();
       self.reInit();
     });
 
@@ -321,6 +334,7 @@ define(function(require, exports, module) {
         orderBy = false;
       }
       showSortDataInList = 'byDateModified';
+      saveExtSettings();
       self.reInit();
     });
 
@@ -394,7 +408,7 @@ define(function(require, exports, module) {
         this.searchResults = this.searchResults.sort(SortByName);
       }
     }
-
+    
     if (orderBy === undefined) {
       self.sortByCriteria('byName', true);
     } else {
