@@ -408,7 +408,7 @@ define(function(require, exports, module) {
         this.searchResults = this.searchResults.sort(SortByName);
       }
     }
-    
+
     if (orderBy === undefined) {
       self.sortByCriteria('byName', true);
     } else {
