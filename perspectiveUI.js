@@ -295,7 +295,7 @@ define(function(require, exports, module) {
       self.reInit();
     });
 
-    this.viewContainer.on("click", ".byExtension", function() {
+    $(".byExtension").on("click", function() {
       if (orderBy === undefined || orderBy === false) {
         orderBy = true;
       } else {
