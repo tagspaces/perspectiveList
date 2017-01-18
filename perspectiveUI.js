@@ -312,6 +312,7 @@ define(function(require, exports, module) {
       } else {
         orderBy = false;
       }
+      showSortDataInList = 'byFileSize';
       saveExtSettings();
       self.reInit();
     });
