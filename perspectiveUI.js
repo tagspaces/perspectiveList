@@ -48,7 +48,73 @@ define(function(require, exports, module) {
     extSettings = JSON.parse(localStorage.getItem("perpectiveListSettings"));
   }
 
+  var fileTileTmpl = Handlebars.compile(
+    '<tr class="odd ui-droppable ui-selected">' +
+    '<td class="byExtension fileTitle noWrap">' +
+    '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="zip">' +
+    '<span class="fileExt">{{fileext}}<span class="fa {{selected}} --->fa-ellipsis-v"></span></span></button><br><button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+    '<i class="fa fa-fw fa-lg {{selected}} ---> fa-check-square-o"></i>'+
+    '</button></td>'+
+    '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>'+
+    '<td class="byTagCount fileTitle forceWrap">' +
+    '{{#each tags}}' +
+    '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+    '<!-- <span class="fa fa-ellipsis-v"></span--></button>' +
+    '{{/each}}' +'</td>'+
+    '<td class="byFileSize fileTitle">{{fileSize}}</td>'+
+    '<td class="byDateModified fileTitle">{{dateModified}}</td></tr>'
 
+   /* '<div title="{{filepath}}" filepath="{{filepath}}" class="fileTile" style="background-image: url(\'{{thumbPath}}\')">' +
+    '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="{{fileext}}" filepath="{{filepath}}">' +
+    '<i class="fa {{selected}} fa-lg"></i><span class="fileExtTile">{{fileext}}</span></button>' +
+    '<div class="tagsInFileTile">' +
+    '{{#each tags}}' +
+    '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+    '<!-- <span class="fa fa-ellipsis-v"></span--></button>' +
+    '{{/each}}' +
+    '</div>' +
+    '<div class="titleInFileTile">{{title}}</div>' +
+    '</div>'*/
+  );
+
+ /* var folderTileTmpl = Handlebars.compile(
+    '<div title="{{folderpath}}" folderpath="{{folderpath}}" class="fileTile">' +
+    '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="folder" folderpath="{{folderpath}}">' +
+    '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
+    '<div class="tagsInFileTile">' +
+    '{{#each tags}}' +
+    '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" folderpath="{{folderpath}}" style="{{style}}">{{tag}}</button>' +
+    '{{/each}}' +
+    '</div>' +
+    '<div class="titleInFileTile">{{title}}</div>' +
+    '</div>'
+  );
+
+  var mainLayoutTemplate = Handlebars.compile(
+    '<div class="extMainContent accordion">' +
+    '{{#each groups}}' +
+    '<div class="accordion-group disableTextSelection" style="width: 100%; border: 0px #aaa solid;">' +
+    '{{#if ../moreThanOneGroup}}' +
+    '<div class="accordion-heading btn-group" style="width:100%; margin: 0px; border-bottom: solid 1px #eee; background-color: #f0f0f0;">' +
+    '<button class="btn btn-link groupTitle" data-toggle="collapse" data-target="#{{../../id}}SortingButtons{{@index}}">' +
+    '<i class="fa fa-minus-square">&nbsp;</i>' +
+    '</button>' +
+    '<span class="btn btn-link groupTitle" id="{{../../id}}HeaderTitle{{@index}}" style="margin-left: 0px; padding-left: 0px;"></span>' +
+    '</div>' +
+    '{{/if}}' +
+    '<div class="accordion-body collapse in" id="{{../id}}SortingButtons{{@index}}" style="margin: 0px 0px 0px 3px; border: 0px;">' +
+    '<div class="accordion-inner tileContainer" id="{{../id}}GroupContent{{@index}}"></div>' +
+    '</div>' +
+    '</div>' +
+    '{{else}}' +
+    '<p style="margin: 5px; font-size: 13px; text-align: center;">Directory does not contain any files or is currently being analysed.</p>' +
+    '{{/each}}' +
+    '<div id="gridShowAllFilesContainer">' +
+    '<button class="btn btn-primary" id="gridShowAllFilesButton">Show all files</button>' +
+    '</div>' +
+    '</div>'
+  );
+*/
   function ExtUI(extID) {
     this.extensionID = extID;
     this.viewContainer = $("#" + this.extensionID + "Container").empty();
@@ -207,7 +273,68 @@ define(function(require, exports, module) {
       self.reInit(true);
     })));
 
-    this.fileTable = $('#' + this.extensionID + "FileTable").dataTable({
+    this.fileTable = $('#' + this.extensionID + "FileTable")
+/*    // get the reference for the body
+    var body = document.getElementsByTagName("body")[0];
+    var tblBody = document.getElementsByTagName("tbody");
+
+    this.searchResults.forEach.call(document.querySelectorAll('#' + this.extensionID + 'FileTable > tbody  > tr'), function(tr) {
+      var row = document.createElement("tr");
+
+      for (var j = 0; j < this.searchResults.length; j++) {
+        // Create a <td> element and a text node, make the text
+        // node the contents of the <td>, and put the <td> at
+        // the end of the table row
+        var cell = document.createElement("td");
+        var cellText = document.createTextNode("text");
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+      }
+
+      // add the row to the end of the table body
+      tblBody.appendChild(row);
+    });*/
+ /*   console.log(this.searchResults);
+    var fileGroups = this.searchResults;
+    _.each(fileGroups, function(value, index) {
+      //$groupeContent = $("#" + self.extensionID + "GroupContent" + index);
+      //$groupeTitle = $("#" + self.extensionID + "HeaderTitle" + index);
+
+      //var groupingTitle = self.calculateGroupTitle(value[0]);
+      //this.fileTable.text(groupingTitle);
+
+      // Sort the files in group by name
+      /!*
+       value = _.sortBy(value, function(entry) {
+       return entry.name;
+       });
+       *!/
+
+      // Iterating over the files in group
+      for (var j = 0; j < value.length; j++) {
+        //console.warn("value: " +value[j].isDirectory + " -- " + value[j].name);
+        if (value[j].isDirectory) {
+          if (showFoldersInList) {
+            hasFolderInList = true;
+            fileGroups.append(self.createFileTile(
+              value[j].name,
+              value[j].path,
+              false
+            ));
+          }
+        } else {
+          fileGroups.append(self.createFileTile(
+            value[j].title,
+            value[j].path,
+            value[j].extension,
+            value[j].tags,
+            false,
+            value[j].meta
+          ));
+        }
+      }
+    });*/
+/*    .dataTable({
       "bStateSave": true,
       "iCookieDuration": 60 * 60 * 24 * 365,
       "bJQueryUI": false,
@@ -226,7 +353,7 @@ define(function(require, exports, module) {
           "sTitle": "File Ext.",
           "sClass": "byExtension fileTitle noWrap",
           "mRender": function(data, type, row) {
-            return self.buttonizeTitle((row.isDirectory ? row.name : row.title), row.path, row.extension, row.isDirectory);
+              return self.buttonizeTitle((row.isDirectory ? row.name : row.title), row.path, row.extension, row.isDirectory);
           },
           "mData": "extension",
         }, {
@@ -260,7 +387,7 @@ define(function(require, exports, module) {
       "aaSorting": [
         [1, "asc"]
       ], // default sorting by filename
-    });
+    });*/
 
     /*
     var dropTarget =  this.viewToolbar;
@@ -347,7 +474,7 @@ define(function(require, exports, module) {
     var self = this;
 
     // Clearing old data
-    this.fileTable.fnClearTable();
+    //this.fileTable.fnClearTable();
 
     if (showAllResult && this.partialResult && this.partialResult.length > 0) {
       this.searchResults = this.allResults;
@@ -416,6 +543,47 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
+
+    console.log(this.searchResults);
+    var fileGroups = this.searchResults;
+    _.each(fileGroups, function(value, index) {
+      //$groupeContent = $("#" + self.extensionID + "GroupContent" + index);
+      //$groupeTitle = $("#" + self.extensionID + "HeaderTitle" + index);
+
+      //var groupingTitle = self.calculateGroupTitle(value[0]);
+      //this.fileTable.text(groupingTitle);
+
+      // Sort the files in group by name
+      /*
+       value = _.sortBy(value, function(entry) {
+       return entry.name;
+       });
+       */
+
+      // Iterating over the files in group
+      for (var j = 0; j < value.length; j++) {
+        //console.warn("value: " +value[j].isDirectory + " -- " + value[j].name);
+        if (value[j].isDirectory) {
+          if (showFoldersInList) {
+            hasFolderInList = true;
+            fileGroups.append(self.createFileTile(
+              value[j].name,
+              value[j].path,
+              false
+            ));
+          }
+        } else {
+          fileGroups.append(self.createFileTile(
+            value[j].title,
+            value[j].path,
+            value[j].extension,
+            value[j].tags,
+            false,
+            value[j].meta
+          ));
+        }
+      }
+    });
     this.fileTable.fnAddData(this.searchResults);
 
     this.fileTable.$('tr')
@@ -544,6 +712,56 @@ define(function(require, exports, module) {
 
     this.refreshThumbnails();
     TSCORE.hideLoadingAnimation();
+  };
+
+  ExtUI.prototype.createFileTile = function(title, filePath, fileExt, fileTags, isSelected, metaObj) {
+    var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(filePath);
+    var fileName = TSCORE.TagUtils.extractFileName(filePath);
+
+    var tmbPath = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    var metaObj = metaObj || {thumbnailPath: ""};
+
+    if (metaObj.thumbnailPath && metaObj.thumbnailPath.length > 2) {
+      tmbPath = encodeURI(metaObj.thumbnailPath);
+      if (isWin) {
+        tmbPath = tmbPath.split('%5C').join('/').split('%3A').join(':');
+      }
+    }
+
+    var context = {
+      filepath: filePath,
+      fileext: fileExt,
+      title: title,
+      coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
+      tags: [],
+      selected: isSelected ? "fa-check-square" : "fa-square-o",
+      thumbPath: tmbPath
+    };
+
+    if (fileTags.length > 0) {
+      var tagString = "" + fileTags;
+      var tags = tagString.split(",");
+
+      for (var i = 0; i < tags.length; i++) {
+        context.tags.push({
+          tag: tags[i],
+          filepath: filePath,
+          style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tags[i]))
+        });
+      }
+    }
+
+    if (metaObj.metaData && metaObj.metaData.tags) {
+      metaObj.metaData.tags.forEach(function(elem) {
+        context.tags.push({
+          tag: elem.title,
+          filepath: filePath,
+          style: elem.style
+        });
+      });
+    }
+
+    return fileTileTmpl(context);
   };
 
   var buttonCompTmpl = Handlebars.compile("" +
