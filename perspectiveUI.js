@@ -11,17 +11,13 @@ define(function(require, exports, module) {
   var TSPOSTIO = require("tspostioapi");
   var saveAs = require("libs/filesaver.js/FileSaver.min");
 
-  var TMB_SIZES = ["100px", "200px", "300px", "400px", "500px"];
-  var supportedFileTypeThumnailing = ['jpg', 'jpeg', 'png', 'gif'];
-
   var extensionDirectory;
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
   var showSortDataInList = 'byName', orderBy = false;
   var hasFolderInList = false;
-  var extSettings;
-  loadExtSettings();
+  var extSettings = loadExtSettings();
 
   if (extSettings && extSettings.showFoldersInList) {
     showFoldersInList = extSettings.showFoldersInList;
@@ -34,6 +30,7 @@ define(function(require, exports, module) {
   if (extSettings && extSettings.showSortDataInList) {
     showSortDataInList = extSettings.showSortDataInList;
   }
+
   //save settings for perpectiveList
   function saveExtSettings() {
     var settings = {
@@ -43,28 +40,62 @@ define(function(require, exports, module) {
     };
     localStorage.setItem('perpectiveListSettings', JSON.stringify(settings));
   }
+
   //load settings for perpectiveGrid
   function loadExtSettings() {
-    extSettings = JSON.parse(localStorage.getItem("perpectiveListSettings"));
+    return JSON.parse(localStorage.getItem("perpectiveListSettings"));
   }
 
-  var fileTileTmpl = Handlebars.compile(
-    '<tr class="odd ui-droppable ui-selected">' +
-    '<td class="byExtension fileTitle noWrap">' +
-    '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="zip">' +
-    '<span class="fileExt">{{fileext}}<span class="fa {{selected}} --->fa-ellipsis-v"></span></span></button><br><button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
-    '<i class="fa fa-fw fa-lg {{selected}} ---> fa-check-square-o"></i>'+
-    '</button></td>'+
-    '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>'+
-    '<td class="byTagCount fileTitle forceWrap">' +
-    '{{#each tags}}' +
-    '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
-    '<!-- <span class="fa fa-ellipsis-v"></span--></button>' +
-    '{{/each}}' +'</td>'+
-    '<td class="byFileSize fileTitle">{{fileSize}}</td>'+
-    '<td class="byDateModified fileTitle">{{dateModified}}</td></tr>'
+  function SortByName(a, b) {
+    var aName = a.name.toLowerCase();
+    var bName = b.name.toLowerCase();
+    return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+  }
 
-   /* '<div title="{{filepath}}" filepath="{{filepath}}" class="fileTile" style="background-image: url(\'{{thumbPath}}\')">' +
+  function SortByIsDirectory(a, b) {
+    if (b.isDirectory && a.isDirectory) {
+      return 0;
+    }
+    return a.isDirectory && !b.isDirectory ? -1 : 1;
+  }
+
+  var tableTmpl = Handlebars.compile(
+    '<table border="0" cellpadding="0" width="100%" id="{{extId}}" class="table content disableTextSelection">' +
+       '<thead><tr>' +
+         '<th class="byExtension fileTitle noWrap">File Ext.</th>' +
+         '<th class="byName fileTitle forceWrap fileTitleWidth">Title</th>' +
+         '<th class="byTagCount fileTitle forceWrap">Tags</th>' +
+         '<th class="byFileSize fileTitle">Size</th>' +
+         '<th class="byDateModified fileTitle">Last Modified</th>' +
+       '</tr></thead>' +
+       '<tbody>' +
+       '{{#each fileList}}' +
+          '<tr class="">' +
+            '<td class="byExtension fileTitle noWrap">' +
+              '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="zip">' +
+              '<span class="fileExt">{{fileext}}<span class="fa {{selected}} --->fa-ellipsis-v"></span></span></button><br><button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+              '<i class="fa fa-fw fa-lg {{selected}} ---> fa-check-square-o"></i>'+
+              '</button></td>'+
+            '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>'+
+            '<td class="byTagCount fileTitle forceWrap">' +
+            //'{{#each tags}}' +
+            //  '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+            //  '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
+            //'{{/each}}' +
+            '</td>'+
+            '<td class="byFileSize fileTitle">{{size}}</td>' +
+            '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
+           '</tr>' +
+       '{{/each}}' +
+       '</tbody>' +
+     '</table>' +
+     '<div style="width: 100%; text-align: center; display: none;">' +
+       '<button id="{{extId}}" style="text-align: center; margin-bottom: 10px;" class="btn btn-primary" title="If you are trying to open more then 1000 files, TagSpaces may experience performance issues.">Show all files"</button>' +
+     '</div>'
+  );
+
+  /* var fileTileTmpl = Handlebars.compile(
+    '<div title="{{filepath}}" filepath="{{filepath}}" class="fileTile" style="background-image: url(\'{{thumbPath}}\')">' +
     '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="{{fileext}}" filepath="{{filepath}}">' +
     '<i class="fa {{selected}} fa-lg"></i><span class="fileExtTile">{{fileext}}</span></button>' +
     '<div class="tagsInFileTile">' +
@@ -74,8 +105,8 @@ define(function(require, exports, module) {
     '{{/each}}' +
     '</div>' +
     '<div class="titleInFileTile">{{title}}</div>' +
-    '</div>'*/
-  );
+    '</div>'
+  );*/
 
  /* var folderTileTmpl = Handlebars.compile(
     '<div title="{{folderpath}}" folderpath="{{folderpath}}" class="fileTile">' +
@@ -89,41 +120,13 @@ define(function(require, exports, module) {
     '<div class="titleInFileTile">{{title}}</div>' +
     '</div>'
   );
-
-  var mainLayoutTemplate = Handlebars.compile(
-    '<div class="extMainContent accordion">' +
-    '{{#each groups}}' +
-    '<div class="accordion-group disableTextSelection" style="width: 100%; border: 0px #aaa solid;">' +
-    '{{#if ../moreThanOneGroup}}' +
-    '<div class="accordion-heading btn-group" style="width:100%; margin: 0px; border-bottom: solid 1px #eee; background-color: #f0f0f0;">' +
-    '<button class="btn btn-link groupTitle" data-toggle="collapse" data-target="#{{../../id}}SortingButtons{{@index}}">' +
-    '<i class="fa fa-minus-square">&nbsp;</i>' +
-    '</button>' +
-    '<span class="btn btn-link groupTitle" id="{{../../id}}HeaderTitle{{@index}}" style="margin-left: 0px; padding-left: 0px;"></span>' +
-    '</div>' +
-    '{{/if}}' +
-    '<div class="accordion-body collapse in" id="{{../id}}SortingButtons{{@index}}" style="margin: 0px 0px 0px 3px; border: 0px;">' +
-    '<div class="accordion-inner tileContainer" id="{{../id}}GroupContent{{@index}}"></div>' +
-    '</div>' +
-    '</div>' +
-    '{{else}}' +
-    '<p style="margin: 5px; font-size: 13px; text-align: center;">Directory does not contain any files or is currently being analysed.</p>' +
-    '{{/each}}' +
-    '<div id="gridShowAllFilesContainer">' +
-    '<button class="btn btn-primary" id="gridShowAllFilesButton">Show all files</button>' +
-    '</div>' +
-    '</div>'
-  );
 */
+
   function ExtUI(extID) {
     this.extensionID = extID;
     this.viewContainer = $("#" + this.extensionID + "Container").empty();
     this.viewToolbar = $("#" + this.extensionID + "Toolbar").empty();
 
-    this.thumbEnabled = false;
-    this.showFileDetails = false;
-    this.showTags = true;
-    this.currentTmbSize = 0;
     this.searchResults = [];
 
     extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + this.extensionID;
@@ -134,12 +137,10 @@ define(function(require, exports, module) {
 
     var self = this;
 
-    var context = {
-      id: this.extensionID
-    };
-
     // Init Toolbar
-    this.viewContainer.append(toolbarTemplate(context));
+    this.viewContainer.append(toolbarTemplate({
+      id: this.extensionID
+    }));
 
     $("#" + this.extensionID + "ToogleSelectAll").on("click", function() {
       self.toggleSelectAll();
@@ -188,10 +189,6 @@ define(function(require, exports, module) {
       saveExtSettings();
     });
 
-    $("#modal_button_ok").on("click", function(evt) {
-      TSCORE.navigateToDirectory(TSCORE.currentPath);
-    });
-
     $("#" + this.extensionID + "CreateDirectoryButton").on("click", function() {
       TSCORE.showCreateDirectoryDialog(TSCORE.currentPath);
     });
@@ -206,210 +203,7 @@ define(function(require, exports, module) {
 
     // Init Toolbar END
 
-    // Init Container
-
-    // Init File Context Menu
-    this.viewContainer.on("contextmenu click", ".fileTitleButton", function(e) {
-      e.preventDefault();
-      TSCORE.hideAllDropDownMenus();
-      self.selectFile($(this).attr("filepath"));
-      if (!$(this).attr("isDirectory")) {
-        TSCORE.showContextMenu("#fileMenu", $(this));
-      }
-      return false;
-    });
-
-    //this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
-    this.viewContainer.on("contextmenu", ".fileTitle", function(e) {
-      var selEl = $(this).parent().find(".fileTitle button");
-      //console.warn("right mousedown: " + selEl.attr("filepath"));
-      e.preventDefault();
-      TSCORE.hideAllDropDownMenus();
-      TSCORE.PerspectiveManager.clearSelectedFiles();
-      self.selectFile(selEl.attr("filepath"));
-      TSCORE.showContextMenu("#fileMenu", $(this));
-      return false;
-    });
-
-    // Init Tag Context Menu
-    this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
-      e.preventDefault();
-      TSCORE.hideAllDropDownMenus();
-      self.selectFile($(this).attr("filepath"));
-      TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
-      TSCORE.showContextMenu("#tagMenu", $(this));
-      return false;
-    });
-
-    // TODO for remove
-    /*this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
-      e.preventDefault();
-      if (e.which == 3) {
-        //console.warn("right mousedown");
-        TSCORE.hideAllDropDownMenus();
-        //self.selectFile(this, $(this).attr("filepath"));
-        if (!$(this).attr("isDirectory")) {
-          TSCORE.showContextMenu("#fileMenu", $(this));
-        }
-      }
-      return false;
-    });*/
-
-    this.viewContainer.append($("<table>", {
-      style: "width: 100%",
-      class: "table content disableTextSelection",
-      id: this.extensionID + "FileTable"
-    }));
-
-    this.viewContainer.append($("<div>", {
-      style: "width: 100%; text-align: center; display: none;",
-    }).append($("<button>", {
-      style: "text-align: center; margin-bottom: 10px;",
-      class: "btn btn-primary",
-      text: "Show all files",
-      title: "If you are trying to open more then 1000 files, TagSpaces may experience performance issues.",
-      id: this.extensionID + "ShowAllResults"
-    }).on("click", function() {
-      self.reInit(true);
-    })));
-
-    this.fileTable = $('#' + this.extensionID + "FileTable")
-/*    // get the reference for the body
-    var body = document.getElementsByTagName("body")[0];
-    var tblBody = document.getElementsByTagName("tbody");
-
-    this.searchResults.forEach.call(document.querySelectorAll('#' + this.extensionID + 'FileTable > tbody  > tr'), function(tr) {
-      var row = document.createElement("tr");
-
-      for (var j = 0; j < this.searchResults.length; j++) {
-        // Create a <td> element and a text node, make the text
-        // node the contents of the <td>, and put the <td> at
-        // the end of the table row
-        var cell = document.createElement("td");
-        var cellText = document.createTextNode("text");
-        cell.appendChild(cellText);
-        row.appendChild(cell);
-      }
-
-      // add the row to the end of the table body
-      tblBody.appendChild(row);
-    });*/
- /*   console.log(this.searchResults);
-    var fileGroups = this.searchResults;
-    _.each(fileGroups, function(value, index) {
-      //$groupeContent = $("#" + self.extensionID + "GroupContent" + index);
-      //$groupeTitle = $("#" + self.extensionID + "HeaderTitle" + index);
-
-      //var groupingTitle = self.calculateGroupTitle(value[0]);
-      //this.fileTable.text(groupingTitle);
-
-      // Sort the files in group by name
-      /!*
-       value = _.sortBy(value, function(entry) {
-       return entry.name;
-       });
-       *!/
-
-      // Iterating over the files in group
-      for (var j = 0; j < value.length; j++) {
-        //console.warn("value: " +value[j].isDirectory + " -- " + value[j].name);
-        if (value[j].isDirectory) {
-          if (showFoldersInList) {
-            hasFolderInList = true;
-            fileGroups.append(self.createFileTile(
-              value[j].name,
-              value[j].path,
-              false
-            ));
-          }
-        } else {
-          fileGroups.append(self.createFileTile(
-            value[j].title,
-            value[j].path,
-            value[j].extension,
-            value[j].tags,
-            false,
-            value[j].meta
-          ));
-        }
-      }
-    });*/
-/*    .dataTable({
-      "bStateSave": true,
-      "iCookieDuration": 60 * 60 * 24 * 365,
-      "bJQueryUI": false,
-      "bPaginate": false,
-      "bLengthChange": false,
-      "bFilter": true,
-      "bSort": false,
-      "bInfo": false,
-      "bAutoWidth": false,
-      "oLanguage": {
-        "sEmptyTable": " " // No files found
-      },
-      "aoColumns": [
-        {
-          "sType": 'natural',
-          "sTitle": "File Ext.",
-          "sClass": "byExtension fileTitle noWrap",
-          "mRender": function(data, type, row) {
-              return self.buttonizeTitle((row.isDirectory ? row.name : row.title), row.path, row.extension, row.isDirectory);
-          },
-          "mData": "extension",
-        }, {
-          "sTitle": "Title",
-          "sClass": "byName fileTitle forceWrap fileTitleWidth",
-          "mData": "title",
-        }, {
-          "sTitle": "Tags",
-          "sClass": "byTagCount fileTitle forceWrap",
-          "mRender": function(data, type, row) {
-            return TSCORE.generateTagButtons(data, row.path);
-          },
-          "mData": "tags",
-        }, {
-          "sType": 'numeric',
-          "sTitle": "Size",
-          "sClass": "byFileSize fileTitle",
-          "mData": "size",
-          "mRender": function(data, type, row) {
-            return TSCORE.TagUtils.formatFileSize(data, true);
-          }
-        }, {
-          "sTitle": "Last Modified",
-          "sClass": "byDateModified fileTitle",
-          "mRender": function(data) {
-            return TSCORE.TagUtils.formatDateTime(data, true); // moment(data).fromNow();
-          },
-          "mData": "lmdt",
-        },
-      ],
-      "aaSorting": [
-        [1, "asc"]
-      ], // default sorting by filename
-    });*/
-
-    /*
-    var dropTarget =  this.viewToolbar;
-    //dropTarget.on("dragover", function () { dropTarget.css("border","2px red solid"); return false; });
-    //dropTarget.on("dragend", function () { dropTarget.css("border","0px solid"); return false; });
-    dropTarget.on("drop", function (e) {
-      e.preventDefault();
-      var droppedFilePath = e.originalEvent.dataTransfer.files[0].path;
-      if( droppedFilePath != undefined){
-          var targetFilePath = TSCORE.currentPath+TSCORE.dirSeparator+TSCORE.TagUtils.extractFileName(droppedFilePath);
-          TSCORE.showConfirmDialog(
-                "Confirm File Move",
-                "Do you want to move '"+droppedFilePath+"' to '"+targetFilePath+"'?",
-                function() { TSCORE.IO.renameFile(droppedFilePath,targetFilePath); }
-            );
-      }
-      //for (var i = 0; i < e.originalEvent.dataTransfer.files.length; ++i) {
-      //  console.log(e.originalEvent.dataTransfer.files[i].path);
-      //}
-      return false;
-    }); */
-
+    // Init Sorting
 
     $(".byName").on("click", function() {
       if (orderBy === undefined || orderBy === false) {
@@ -465,16 +259,10 @@ define(function(require, exports, module) {
       saveExtSettings();
       self.reInit();
     });
-
-    // Disable alerts in datatable
-    this.fileTable.dataTableExt.sErrMode = 'throw';
   };
 
   ExtUI.prototype.reInit = function(showAllResult) {
     var self = this;
-
-    // Clearing old data
-    //this.fileTable.fnClearTable();
 
     if (showAllResult && this.partialResult && this.partialResult.length > 0) {
       this.searchResults = this.allResults;
@@ -489,21 +277,8 @@ define(function(require, exports, module) {
         this.searchResults = this.partialResult;
       } else {
         this.searchResults = this.allResults;
-        $("#" + this.extensionID + "ShowAllResults").parent().hide();
+        $("#" + this.extensionID + "ShowAllResults").parent().hide(); // TODO element not visible
       }
-    }
-
-    function SortByName(a, b) {
-      var aName = a.name.toLowerCase();
-      var bName = b.name.toLowerCase();
-      return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
-    }
-
-    function SortByIsDirectory(a, b) {
-      if (b.isDirectory && a.isDirectory) {
-        return 0;
-      }
-      return a.isDirectory && !b.isDirectory ? -1 : 1;
     }
 
     //sort by isDirectory in order to show folders on the top of the list
@@ -537,57 +312,60 @@ define(function(require, exports, module) {
       }
     }
 
-    if (orderBy === undefined) {
+    if (!orderBy) {
       self.sortByCriteria('byName', true);
     } else {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
+    var context = {
+      extId: this.extensionID,
+      fileList: this.searchResults
+    };
 
-    console.log(this.searchResults);
-    var fileGroups = this.searchResults;
-    _.each(fileGroups, function(value, index) {
-      //$groupeContent = $("#" + self.extensionID + "GroupContent" + index);
-      //$groupeTitle = $("#" + self.extensionID + "HeaderTitle" + index);
+    // Init Toolbar
+    this.viewContainer.html(tableTmpl(context));
 
-      //var groupingTitle = self.calculateGroupTitle(value[0]);
-      //this.fileTable.text(groupingTitle);
+    this.fileTable = $('#' + this.extensionID + "FileTable");
 
-      // Sort the files in group by name
-      /*
-       value = _.sortBy(value, function(entry) {
-       return entry.name;
-       });
-       */
-
-      // Iterating over the files in group
-      for (var j = 0; j < value.length; j++) {
-        //console.warn("value: " +value[j].isDirectory + " -- " + value[j].name);
-        if (value[j].isDirectory) {
-          if (showFoldersInList) {
-            hasFolderInList = true;
-            fileGroups.append(self.createFileTile(
-              value[j].name,
-              value[j].path,
-              false
-            ));
-          }
-        } else {
-          fileGroups.append(self.createFileTile(
-            value[j].title,
-            value[j].path,
-            value[j].extension,
-            value[j].tags,
-            false,
-            value[j].meta
-          ));
-        }
+    // Init File Context Menu
+    this.viewContainer.on("contextmenu click", ".fileTitleButton", function(e) {
+      e.preventDefault();
+      TSCORE.hideAllDropDownMenus();
+      self.selectFile($(this).attr("filepath"));
+      if (!$(this).attr("isDirectory")) {
+        TSCORE.showContextMenu("#fileMenu", $(this));
       }
+      return false;
     });
-    this.fileTable.fnAddData(this.searchResults);
 
-    this.fileTable.$('tr')
-      .droppable({
+    //this.viewContainer.on("contextmenu mousedown", ".ui-selected td", function(e) {
+    this.viewContainer.on("contextmenu", ".fileTitle", function(e) {
+      var selEl = $(this).parent().find(".fileTitle button");
+      //console.warn("right mousedown: " + selEl.attr("filepath"));
+      e.preventDefault();
+      TSCORE.hideAllDropDownMenus();
+      TSCORE.PerspectiveManager.clearSelectedFiles();
+      self.selectFile(selEl.attr("filepath"));
+      TSCORE.showContextMenu("#fileMenu", $(this));
+      return false;
+    });
+
+    // Init Tag Context Menu
+    this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
+      e.preventDefault();
+      TSCORE.hideAllDropDownMenus();
+      self.selectFile($(this).attr("filepath"));
+      TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
+      TSCORE.showContextMenu("#tagMenu", $(this));
+      return false;
+    });
+
+    $("#" + this.extensionID + "ShowAllResults").on("click", function() {
+      self.reInit(true);
+    });
+
+    this.fileTable.find('tr').droppable({
         accept: ".tagButton",
         hoverClass: "activeRow",
         drop: function(event, ui) {
@@ -620,15 +398,14 @@ define(function(require, exports, module) {
       });
 
     if (isCordova) {
-      this.fileTable.$('tr').hammer().on("doubletap", function() {
+      this.fileTable.find('tr').hammer().on("doubletap", function() {
           console.log("Doubletap & Opening file...");
           var titleBut = $(this).find(".fileTitleButton");
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
           self.selectFile($(titleBut).attr("filepath"));
         });
     } else {
-      this.fileTable.$('tr')
-        .on("dblclick", function() {
+      this.fileTable.find('tr').on("dblclick", function() {
           console.log("Doubletap -> Opening file...");
           var titleBut = $(this).find(".fileTitleButton");
           if ($(titleBut).attr("isDirectory")) {
@@ -641,9 +418,7 @@ define(function(require, exports, module) {
         });
     }
 
-    this.fileTable.$('.fileTitleButton')
-      //.on('click', function(e) { e.preventDefault(); return false; })
-      .draggable({
+    this.fileTable.find('.fileTitleButton').draggable({
         "zIndex": 10000,
         "cancel": false,
         "appendTo": "body",
@@ -655,8 +430,7 @@ define(function(require, exports, module) {
         }
       });
 
-    this.fileTable.$('.fileSelection')
-      .on('click', function(e) {
+    this.fileTable.find('.fileSelection').on('click', function(e) {
         e.preventDefault();
         var fpath = $(this).parent().find(".fileTitleButton").attr("filepath");
         var stateTag = $(this).find("i");
@@ -675,9 +449,7 @@ define(function(require, exports, module) {
         return false;
       });
 
-    this.fileTable.$('.tagButton')
-      //.on('click', function(e) { e.preventDefault(); return false; })
-      .draggable({
+    this.fileTable.find('.tagButton').draggable({
         "zIndex": 10000,
         "cancel": false,
         "appendTo": "body",
@@ -709,7 +481,6 @@ define(function(require, exports, module) {
       self.toggleSelectAll();
     });
 
-    this.refreshThumbnails();
     TSCORE.hideLoadingAnimation();
   };
 
@@ -762,11 +533,6 @@ define(function(require, exports, module) {
 
     return fileTileTmpl(context);
   };
-
-  var buttonCompTmpl = Handlebars.compile("" +
-    '<button filepath="{{filepath}}" isDirectory="{{isDirectory}}" title="{{filepath}}" class="btn btn-link fileTitleButton {{coloredExtClass}}" data-ext="{{fileext}}">' +
-    '<span class="fileExt">{{fileext}}&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span></span></button><br>' +
-    '<button filepath="{{filepath}}" class="btn btn-link fileSelection"><i class="fa {{selected}} fa-fw fa-lg"></i></button>');
 
   // Helper function user by basic and search views
   ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
@@ -911,8 +677,6 @@ define(function(require, exports, module) {
     $($fileRow.find("td")[0]).empty().append(this.buttonizeTitle(title, newFilePath, fileExt, false, true));
     $($fileRow.find("td")[1]).text(title);
     $($fileRow.find("td")[2]).empty().append(TSCORE.generateTagButtons(fileTags, newFilePath));
-
-    this.refreshThumbnails();
 
     var self = this;
     $fileRow.find('.fileTitleButton')
