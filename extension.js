@@ -24,7 +24,6 @@ define(function(require, exports, module) {
     extensionLoaded = new Promise(function(resolve, reject) {
       require([
         "css!" + extensionDirectory + '/extension.css',
-        extensionDirectory + '/libs/datatables/media/js/jquery.dataTables.js',
       ], function() {
         require([
           extensionDirectory + '/perspectiveUI.js',
