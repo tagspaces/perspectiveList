@@ -692,7 +692,6 @@ define(function(require, exports, module) {
     // Enable all buttons
     this.viewToolbar.find(".btn").prop('disabled', false);
     // Disable certain buttons again
-    $("#" + this.extensionID + "IncreaseThumbsButton").prop('disabled', true);
     $("#" + this.extensionID + "TagButton").prop('disabled', true);
     $("#" + this.extensionID + "CopyMoveButton").prop('disabled', true);
 
@@ -830,52 +829,6 @@ define(function(require, exports, module) {
     });
     TSCORE.selectedFiles.push(filePath);
     this.handleElementActivation();
-  };
-
-  ExtUI.prototype.switchThumbnailSize = function() {
-    this.currentTmbSize = this.currentTmbSize + 1;
-
-    if (this.currentTmbSize >= TMB_SIZES.length) {
-      this.currentTmbSize = 0;
-    }
-
-    $('.thumbImg').css({
-      "max-width": TMB_SIZES[this.currentTmbSize],
-      "max-height": TMB_SIZES[this.currentTmbSize]
-    });
-  };
-
-  ExtUI.prototype.enableThumbnails = function() {
-    $("#" + this.extensionID + "IncreaseThumbsButton").prop('disabled', false);
-    $.each(this.fileTable.$('.thumbImg'), function() {
-      $(this).attr('style', "");
-      $(this).attr('src', $(this).attr('filepath'));
-    });
-    $('.thumbImg').css({
-      "max-width": TMB_SIZES[this.currentTmbSize],
-      "max-height": TMB_SIZES[this.currentTmbSize]
-    });
-  };
-
-  ExtUI.prototype.disableThumbnails = function() {
-    $("#" + this.extensionID + "IncreaseThumbsButton").prop('disabled', true);
-    $.each(this.fileTable.$('.thumbImg'), function() {
-      $(this).attr('style', "width: 0px; height: 0px; border: 0px");
-      $(this).attr('src', "");
-    });
-  };
-
-  ExtUI.prototype.refreshThumbnails = function() {
-    if (this.thumbEnabled) {
-      this.enableThumbnails();
-    } else {
-      this.disableThumbnails();
-    }
-  };
-
-  ExtUI.prototype.toggleThumbnails = function() {
-    this.thumbEnabled = !this.thumbEnabled;
-    this.refreshThumbnails();
   };
 
   ExtUI.prototype.handleElementActivation = function() {
