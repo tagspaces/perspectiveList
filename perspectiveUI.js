@@ -596,16 +596,9 @@ define(function(require, exports, module) {
         //TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
 
-        var rectangle = this.getBoundingClientRect();
-        var isVisible = (
-          rectangle.top >= 100 &&
-          rectangle.left >= 0 &&
-          rectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-          rectangle.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-        if (!isVisible) {
+         if (!TSCORE.Utils.isVisibleOnScreen(this)) {
           $("#viewContainers").animate({
-            scrollTop: $('.ui-selected').offset().top - $("#perspectiveListContainer").offset().top
+            scrollTop: $(this).offset().top - $("#perspectiveListContainer").offset().top
           }, 100);
         }
       }
