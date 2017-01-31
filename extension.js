@@ -19,17 +19,18 @@ define(function(require, exports, module) {
   function init() {
     console.log("Initializing perspective " + extensionID);
 
-
-
     extensionLoaded = new Promise(function(resolve, reject) {
       require([
+        extensionDirectory + '/perspectiveUI.js',
+        "text!" + extensionDirectory + '/toolbar.html',
         "css!" + extensionDirectory + '/extension.css',
-      ], function() {
-        require([
-          extensionDirectory + '/perspectiveUI.js',
-          "text!" + extensionDirectory + '/toolbar.html',
-            "marked",
-          extensionDirectory + '/libs/natural.js',                    
+        //"css!" + extensionDirectory + '/extension.css',
+      //], function() {
+      //  require([
+      //    extensionDirectory + '/perspectiveUI.js',
+      //    "text!" + extensionDirectory + '/toolbar.html',
+      //      "marked",
+          //extensionDirectory + '/libs/natural.js',
         ], function(extUI, toolbarTPL, marked) {
 
           var toolbarTemplate = Handlebars.compile(toolbarTPL);
@@ -37,7 +38,6 @@ define(function(require, exports, module) {
           UI.buildUI(toolbarTemplate);
 
           try {
-            // TODO refactor translations
             var translation = $.i18n.t("ns.perspectives:fileExtension");
             if (translation.length > 0) {
               $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
@@ -100,7 +100,7 @@ define(function(require, exports, module) {
           resolve(true);
         });
       });
-    });
+    //});
   }
 
   function handleLinks($element) {

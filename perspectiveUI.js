@@ -61,56 +61,66 @@ define(function(require, exports, module) {
 
   var tableTmpl = Handlebars.compile(
     '<table border="0" cellpadding="0" width="100%" id="{{extId}}" class="table content disableTextSelection">' +
-    '<thead><tr>' +
-    '<th class="byExtension fileTitle noWrap">File Ext.</th>' +
-    '<th class="byName fileTitle forceWrap fileTitleWidth">Title</th>' +
-    '<th class="byTagCount fileTitle forceWrap">Tags</th>' +
-    '<th class="byFileSize fileTitle">Size</th>' +
-    '<th class="byDateModified fileTitle">Last Modified</th>' +
-    '</tr></thead>' +
-    '<tbody>' +
-    '{{#each fileList}}' +
-    '<tr class="">' +
-    '<td class="byExtension fileTitle noWrap">' +
-    '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-    '<span class="fileExt">{{extension}}' +
-    //'<span class="fa {{selected}}"></span>' +
-    '</span>' +
-    '</button><br>' +
-    '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
-    '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
-    '</button></td>' +
-    '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
-    '<td class="byTagCount fileTitle forceWrap">' +
-      '{{#each tags}}' +
-        '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
-        '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
-      '{{/each}}' +
-    '</td>' +
-    '<td class="byFileSize fileTitle">{{size}}</td>' +
-    '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
-    '</tr>' +
-    '{{/each}}' +
-    '</tbody>' +
+      '<thead><tr>' +
+        '<th class="byExtension fileTitle noWrap">File Ext.</th>' +
+        '<th class="byName fileTitle forceWrap fileTitleWidth">Title</th>' +
+        '<th class="byTagCount fileTitle forceWrap">Tags</th>' +
+        '<th class="byFileSize fileTitle">Size</th>' +
+        '<th class="byDateModified fileTitle">Last Modified</th>' +
+      '</tr></thead>' +
+        '<tbody>' +
+          /*'{{#each fileList}}' +
+          '<tr class="">' +
+          '<td class="byExtension fileTitle noWrap">' +
+          '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<span class="fileExt">{{extension}}' +
+          //'<span class="fa {{selected}}"></span>' +
+          '</span>' +
+          '</button><br>' +
+          '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
+          '</button></td>' +
+          '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
+          '<td class="byTagCount fileTitle forceWrap">' +
+            '{{#each tags}}' +
+              '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+              '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
+            '{{/each}}' +
+          '</td>' +
+          '<td class="byFileSize fileTitle">{{size}}</td>' +
+          '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
+          '</tr>' +
+          '{{/each}}' +*/
+      '</tbody>' +
     '</table>' +
     '<div style="width: 100%; text-align: center; display: none;">' +
     '<button id="{{extId}}" style="text-align: center; margin-bottom: 10px;" class="btn btn-primary" title="If you are trying to open more then 1000 files, TagSpaces may experience performance issues.">Show all files"</button>' +
     '</div>'
   );
 
-  /* var fileTileTmpl = Handlebars.compile(
-   '<div title="{{filepath}}" filepath="{{filepath}}" class="fileTile" style="background-image: url(\'{{thumbPath}}\')">' +
-   '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="{{fileext}}" filepath="{{filepath}}">' +
-   '<i class="fa {{selected}} fa-lg"></i><span class="fileExtTile">{{fileext}}</span></button>' +
-   '<div class="tagsInFileTile">' +
-   '{{#each tags}}' +
-   '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
-   '<!-- <span class="fa fa-ellipsis-v"></span--></button>' +
-   '{{/each}}' +
-   '</div>' +
-   '<div class="titleInFileTile">{{title}}</div>' +
-   '</div>'
-   );*/
+   var fileTileTmpl = Handlebars.compile(
+     '<tr class="">' +
+       '<td class="byExtension fileTitle noWrap">' +
+        '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
+          '<span class="fileExt">{{fileext}}' +
+           //'<span class="fa {{selected}}"></span>' +
+          '</span>' +
+          '</button><br>' +
+          '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
+        '</button>' +
+       '</td>' +
+       '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
+       '<td class="byTagCount fileTitle forceWrap">' +
+         '{{#each tags}}' +
+         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+         '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
+         '{{/each}}' +
+       '</td>' +
+       '<td class="byFileSize fileTitle">{{size}}</td>' +
+       '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
+     '</tr>'
+   );
 
   /* var folderTileTmpl = Handlebars.compile(
    '<div title="{{folderpath}}" folderpath="{{folderpath}}" class="fileTile">' +
@@ -221,7 +231,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byName';
       saveExtSettings();
-      self.reInit();
+      //self.reInit();
     });
 
     $(".byExtension").on("click", function() {
@@ -232,7 +242,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byExtension';
       saveExtSettings();
-      self.reInit();
+      //self.reInit();
     });
 
     $(".byFileSize").on("click", function() {
@@ -243,7 +253,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byFileSize';
       saveExtSettings();
-      self.reInit();
+      //self.reInit();
     });
 
     $(".byTagCount").on("click", function() {
@@ -254,7 +264,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byTagCount';
       saveExtSettings();
-      self.reInit();
+      //self.reInit();
     });
 
     $(".byDateModified").on("click", function() {
@@ -265,12 +275,15 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byDateModified';
       saveExtSettings();
-      self.reInit();
+      //self.reInit();
     });
+
+    console.log('DOUBLE BUILD')
   };
 
   ExtUI.prototype.reInit = function(showAllResult) {
     var self = this;
+    console.log('DOUBLE reInit')
 
     if (showAllResult && this.partialResult && this.partialResult.length > 0) {
       this.searchResults = this.allResults;
@@ -326,24 +339,25 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
+    this.viewContainer.append(tableTmpl({
+      extId: this.extensionID,
+      //fileList: this.searchResults
+    }));
+
     var context = {
       extId: this.extensionID,
       fileList: this.searchResults
     };
+    var $viewContainer = this.viewContainer.find('tbody');
+    console.log($viewContainer)
 
     // Init Toolbar
     _.each(context.fileList, function(value, index) {
-        value.id = index,
-        value.title,
-        value.path,
-        value.extension,
-        value.tags,
-        value.size = TSCORE.TagUtils.formatFileSize(value.size, true),
-        value.lmdt = TSCORE.TagUtils.formatDateTime(value.lmdt, true),
-        false,
-        value.meta
+      console.log(value)
+      $viewContainer.append(self.createFileTile(value, false));
     });
-    this.viewContainer.append(tableTmpl(context));
+
+    //this.viewContainer.append(tableTmpl(context));
     
     this.fileTable = $('#' + this.extensionID + "FileTable");
 
@@ -381,7 +395,7 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "ShowAllResults").on("click", function() {
-      self.reInit(true);
+      //self.reInit(true);
     });
 
     $("#" + this.extensionID).find('tr').droppable({
@@ -502,12 +516,12 @@ define(function(require, exports, module) {
     TSCORE.hideLoadingAnimation();
   };
 
-  ExtUI.prototype.createFileTile = function(title, filePath, fileExt, fileTags, isSelected, metaObj) {
-    var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(filePath);
-    var fileName = TSCORE.TagUtils.extractFileName(filePath);
+  ExtUI.prototype.createFileTile = function(data, isSelected) {
+    //var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(value.path);
+    //var fileName = TSCORE.TagUtils.extractFileName(value.path);
 
     var tmbPath = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-    var metaObj = metaObj || {thumbnailPath: ""};
+    var metaObj = data.meta || {thumbnailPath: ""};
 
     if (metaObj.thumbnailPath && metaObj.thumbnailPath.length > 2) {
       tmbPath = encodeURI(metaObj.thumbnailPath);
@@ -517,23 +531,25 @@ define(function(require, exports, module) {
     }
 
     var context = {
-      filepath: filePath,
-      fileext: fileExt,
-      title: title,
+      filepath: data.path,
+      fileext: data.extension,
+      title: data.title,
+      lmdt: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
+      size: TSCORE.TagUtils.formatFileSize(data.size, true),
       coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
       tags: [],
       selected: isSelected ? "fa-check-square" : "fa-square-o",
       thumbPath: tmbPath
     };
 
-    if (fileTags.length > 0) {
-      var tagString = "" + fileTags;
+    if (data.tags.length > 0) {
+      var tagString = "" + data.tags;
       var tags = tagString.split(",");
 
       for (var i = 0; i < tags.length; i++) {
         context.tags.push({
           tag: tags[i],
-          filepath: filePath,
+          filepath: data.path,
           style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tags[i]))
         });
       }
@@ -543,17 +559,17 @@ define(function(require, exports, module) {
       metaObj.metaData.tags.forEach(function(elem) {
         context.tags.push({
           tag: elem.title,
-          filepath: filePath,
+          filepath: data.path,
           style: elem.style
         });
       });
     }
 
-    return tableTmpl(context);
+    return fileTileTmpl(context);
   };
 
   // Helper function user by basic and search views
-  ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
+/*  ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
     if (title.length < 1) {
       title = filePath;
     }
@@ -577,7 +593,7 @@ define(function(require, exports, module) {
     };
 
     return buttonCompTmpl(context);
-  };
+  };*/
 
   ExtUI.prototype.clearSelectedFiles = function() {
     TSCORE.selectedFiles = [];
@@ -650,9 +666,9 @@ define(function(require, exports, module) {
 
     var row4remove;
     if (isWin && !isWeb) {
-      filePath = filePath.replace("\\", "");
+      filePath = filePath.replace("/\//g", "");
       $("#" + this.extensionID + "Container button[filepath]").each(function() {
-        if ($(this).attr("filepath").replace("\\", "") === filePath) {
+        if ($(this).attr("filepath").replace("/\//g", "") === filePath) {
           row4remove = $(this).parent().parent();
         }
       });
@@ -680,9 +696,9 @@ define(function(require, exports, module) {
     var $fileRow;
 
     if (isWin && !isWeb) {
-      oldFilePath = oldFilePath.replace("\\", "");
+      oldFilePath = oldFilePath.replace("/\//g", "");
       $("#" + this.extensionID + "Container button[filepath]").each(function() {
-        if ($(this).attr("filepath").replace("\\", "") === oldFilePath) {
+        if ($(this).attr("filepath").replace("/\//g", "") === oldFilePath) {
           $fileRow = $(this).parent().parent();
         }
       });
@@ -690,7 +706,7 @@ define(function(require, exports, module) {
       $fileRow = $("#" + this.extensionID + "Container button[filepath='" + oldFilePath + "']").parent().parent();
     }
 
-    $($fileRow.find("td")[0]).empty().append(this.buttonizeTitle(title, newFilePath, fileExt, false, true));
+    $($fileRow.find("td")[0]).empty().append(this.createFileTile(title, newFilePath, fileExt, false, true));
     $($fileRow.find("td")[1]).text(title);
     $($fileRow.find("td")[2]).empty().append(TSCORE.generateTagButtons(fileTags, newFilePath));
 
