@@ -8,7 +8,6 @@ define(function(require, exports, module) {
   console.log("Loading UI for perspectiveList");
 
   var TSCORE = require("tscore");
-  var TSPOSTIO = require("tspostioapi");
   var saveAs = require("libs/filesaver.js/FileSaver.min");
 
   var TMB_SIZES = ["100px", "200px", "300px", "400px", "500px"];
