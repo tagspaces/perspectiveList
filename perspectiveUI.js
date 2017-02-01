@@ -8,7 +8,6 @@ define(function(require, exports, module) {
   console.log("Loading UI for perspectiveList");
 
   var TSCORE = require("tscore");
-  var TSPOSTIO = require("tspostioapi");
   var saveAs = require("libs/filesaver.js/FileSaver.min");
 
   var TMB_SIZES = ["100px", "200px", "300px", "400px", "500px"];
@@ -312,6 +311,7 @@ define(function(require, exports, module) {
       } else {
         orderBy = false;
       }
+      showSortDataInList = 'byFileSize';
       saveExtSettings();
       self.reInit();
     });
@@ -594,17 +594,9 @@ define(function(require, exports, module) {
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
         //TSCORE.selectedFiles.push($(this).attr("filepath"));
         selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
-
-        var rectangle = this.getBoundingClientRect();
-        var isVisible = (
-          rectangle.top >= 100 &&
-          rectangle.left >= 0 &&
-          rectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-          rectangle.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-        if (!isVisible) {
+        if (!TSCORE.Utils.isVisibleOnScreen(this)) {
           $("#viewContainers").animate({
-            scrollTop: $('.ui-selected').offset().top - $("#perspectiveListContainer").offset().top
+            scrollTop: $(this).offset().top - $("#perspectiveListContainer").offset().top
           }, 100);
         }
       }
