@@ -231,7 +231,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byName';
       saveExtSettings();
-      //self.reInit();
+      self.reInit();
     });
 
     $(".byExtension").on("click", function() {
@@ -242,7 +242,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byExtension';
       saveExtSettings();
-      //self.reInit();
+      self.reInit();
     });
 
     $(".byFileSize").on("click", function() {
@@ -253,7 +253,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byFileSize';
       saveExtSettings();
-      //self.reInit();
+      self.reInit();
     });
 
     $(".byTagCount").on("click", function() {
@@ -264,7 +264,7 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byTagCount';
       saveExtSettings();
-      //self.reInit();
+      self.reInit();
     });
 
     $(".byDateModified").on("click", function() {
@@ -275,15 +275,12 @@ define(function(require, exports, module) {
       }
       showSortDataInList = 'byDateModified';
       saveExtSettings();
-      //self.reInit();
+      self.reInit();
     });
-
-    console.log('DOUBLE BUILD')
   };
 
   ExtUI.prototype.reInit = function(showAllResult) {
     var self = this;
-    console.log('DOUBLE reInit')
 
     if (showAllResult && this.partialResult && this.partialResult.length > 0) {
       this.searchResults = this.allResults;
@@ -339,7 +336,7 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
-    this.viewContainer.append(tableTmpl({
+    this.viewContainer.html(tableTmpl({
       extId: this.extensionID,
       //fileList: this.searchResults
     }));
@@ -349,16 +346,12 @@ define(function(require, exports, module) {
       fileList: this.searchResults
     };
     var $viewContainer = this.viewContainer.find('tbody');
-    console.log($viewContainer)
 
     // Init Toolbar
-    _.each(context.fileList, function(value, index) {
-      console.log(value)
-      $viewContainer.append(self.createFileTile(value, false));
+    _.each(context.fileList, function(data, index) {
+      $viewContainer.append(self.createFileTile(data, false));
     });
 
-    //this.viewContainer.append(tableTmpl(context));
-    
     this.fileTable = $('#' + this.extensionID + "FileTable");
 
     // Init File Context Menu

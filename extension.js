@@ -24,83 +24,72 @@ define(function(require, exports, module) {
         extensionDirectory + '/perspectiveUI.js',
         "text!" + extensionDirectory + '/toolbar.html',
         "css!" + extensionDirectory + '/extension.css',
-        //"css!" + extensionDirectory + '/extension.css',
-      //], function() {
-      //  require([
-      //    extensionDirectory + '/perspectiveUI.js',
-      //    "text!" + extensionDirectory + '/toolbar.html',
-      //      "marked",
-          //extensionDirectory + '/libs/natural.js',
-        ], function(extUI, toolbarTPL, marked) {
+      ], function(extUI, toolbarTPL, marked) {
 
-          var toolbarTemplate = Handlebars.compile(toolbarTPL);
-          UI = new extUI.ExtUI(extensionID);
-          UI.buildUI(toolbarTemplate);
-
-          try {
-            var translation = $.i18n.t("ns.perspectives:fileExtension");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:fileTitle");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:fileTags");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:fileSize");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:fileLDTM");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:filePath");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
-            }
-            translation = $.i18n.t("ns.perspectives:fileName");
-            if (translation.length > 0) {
-              $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
-            }
-            $('#' + extensionID + 'Container [data-i18n]').i18n();
-            
-            //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));          
-            $('#aboutExtensionModal').on('show.bs.modal', function() {
-              $.ajax({
-                url: extensionDirectory + '/README.md',
-                type: 'GET'
-              })
-              .done(function(mdData) {
-                //console.log("DATA: " + mdData);
-                if (marked) {
-                  var modalBody = $("#aboutExtensionModal .modal-body");
-                  modalBody.html(marked(mdData, {sanitize: true}));
-                  handleLinks(modalBody);
-                } else {
-                  console.log("markdown to html transformer not found");
-                }
-              })
-              .fail(function(data) {
-                console.warn("Loading file failed " + data);
-              });
-            }); 
-            
-          } catch (err) {
-            console.log("Translating extension failed.");
+        var toolbarTemplate = Handlebars.compile(toolbarTPL);
+        UI = new extUI.ExtUI(extensionID);
+        UI.buildUI(toolbarTemplate);
+        if (isCordova) {
+          TSCORE.reLayout();
+        }
+        platformTuning();
+     
+        try {
+          var translation = $.i18n.t("ns.perspectives:fileExtension");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
           }
-
-          if (isCordova) {
-            TSCORE.reLayout();
+          translation = $.i18n.t("ns.perspectives:fileTitle");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
           }
-          platformTuning();
-          resolve(true);
-        });
+          translation = $.i18n.t("ns.perspectives:fileTags");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
+          }
+          translation = $.i18n.t("ns.perspectives:fileSize");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
+          }
+          translation = $.i18n.t("ns.perspectives:fileLDTM");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
+          }
+          translation = $.i18n.t("ns.perspectives:filePath");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
+          }
+          translation = $.i18n.t("ns.perspectives:fileName");
+          if (translation.length > 0) {
+            $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
+          }
+          $('#' + extensionID + 'Container [data-i18n]').i18n();
+
+          //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));
+          $('#aboutExtensionModal').on('show.bs.modal', function() {
+            $.ajax({
+              url: extensionDirectory + '/README.md',
+              type: 'GET'
+            }).done(function(mdData) {
+              //console.log("DATA: " + mdData);
+              if (marked) {
+                var modalBody = $("#aboutExtensionModal .modal-body");
+                modalBody.html(marked(mdData, {sanitize: true}));
+                handleLinks(modalBody);
+              } else {
+                console.log("markdown to html transformer not found");
+              }
+            }).fail(function(data) {
+              console.warn("Loading file failed " + data);
+            });
+          });
+
+        } catch (err) {
+          console.log("Translating extension failed.");
+        }
+        resolve(true);
       });
-    //});
+    });
   }
 
   function handleLinks($element) {
@@ -108,7 +97,7 @@ define(function(require, exports, module) {
       var currentSrc = $(this).attr("href");
       $(this).bind('click', function(e) {
         e.preventDefault();
-        var msg = {command: "openLinkExternally", link : currentSrc};
+        var msg = {command: "openLinkExternally", link: currentSrc};
         window.parent.postMessage(JSON.stringify(msg), "*");
       });
     });
@@ -132,6 +121,7 @@ define(function(require, exports, module) {
   function load() {
     console.log("Loading perspective " + extensionID);
     extensionLoaded.then(function() {
+      console.log("PERSPECTIVE LIST EXECUTED")
       UI.reInit();
     }, function(err) {
       console.warn("Loading extension failed: " + err);
