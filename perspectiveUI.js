@@ -99,27 +99,29 @@ define(function(require, exports, module) {
   );
 
    var fileTileTmpl = Handlebars.compile(
+     '{{#each fileList}}' +
      '<tr class="">' +
        '<td class="byExtension fileTitle noWrap">' +
-        '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
-          '<span class="fileExt">{{fileext}}' +
+        '<button filepath="{{path}}" isdirectory="" title="{{context.fileList.path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<span class="fileExt">{{extension}}' +
            //'<span class="fa {{selected}}"></span>' +
           '</span>' +
           '</button><br>' +
-          '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
           '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
         '</button>' +
        '</td>' +
        '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
        '<td class="byTagCount fileTitle forceWrap">' +
          '{{#each tags}}' +
-         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
          '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
          '{{/each}}' +
        '</td>' +
        '<td class="byFileSize fileTitle">{{size}}</td>' +
        '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
-     '</tr>'
+     '</tr>' +
+     '{{/each}}'
    );
 
   /* var folderTileTmpl = Handlebars.compile(
@@ -336,10 +338,10 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
-    this.viewContainer.html(tableTmpl({
-      extId: this.extensionID,
-      //fileList: this.searchResults
-    }));
+    //this.viewContainer.html(tableTmpl({
+    //  extId: this.extensionID,
+    //  //fileList: this.searchResults
+    //}));
 
     var context = {
       extId: this.extensionID,
@@ -348,7 +350,10 @@ define(function(require, exports, module) {
     var $viewContainer = this.viewContainer.find('tbody');
 
     // Init Toolbar
-    _.each(context.fileList, function(data, index) {
+    $viewContainer.html(fileTileTmpl({
+      'fileList' : context.fileList
+    }));
+    context.fileList.forEach(function(data, index) {
       $viewContainer.append(self.createFileTile(data, false));
     });
 

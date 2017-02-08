@@ -121,7 +121,6 @@ define(function(require, exports, module) {
   function load() {
     console.log("Loading perspective " + extensionID);
     extensionLoaded.then(function() {
-      console.log("PERSPECTIVE LIST EXECUTED")
       UI.reInit();
     }, function(err) {
       console.warn("Loading extension failed: " + err);
