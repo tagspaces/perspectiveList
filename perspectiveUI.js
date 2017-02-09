@@ -115,7 +115,7 @@ define(function(require, exports, module) {
        '<td class="byTagCount fileTitle forceWrap">' +
          '{{#each tags}}' +
          '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
-         '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
+         '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
          '{{/each}}' +
        '</td>' +
        '<td class="byFileSize fileTitle">{{size}}</td>' +
