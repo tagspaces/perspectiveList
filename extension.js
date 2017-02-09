@@ -33,7 +33,7 @@ define(function(require, exports, module) {
           TSCORE.reLayout();
         }
         platformTuning();
-     
+
         try {
           var translation = $.i18n.t("ns.perspectives:fileExtension");
           if (translation.length > 0) {
@@ -72,13 +72,12 @@ define(function(require, exports, module) {
               type: 'GET'
             }).done(function(mdData) {
               //console.log("DATA: " + mdData);
-              if (marked) {
-                var modalBody = $("#aboutExtensionModal .modal-body");
-                modalBody.html(marked(mdData, {sanitize: true}));
-                handleLinks(modalBody);
-              } else {
-                console.log("markdown to html transformer not found");
-              }
+              //if (marked) {
+              var modalBody = $("#aboutExtensionModal .modal-body");
+              TSCORE.Utils.setMarkDownContent(modalBody, mdData);
+              //} else {
+              //  console.log("markdown to html transformer not found");
+              //}
             }).fail(function(data) {
               console.warn("Loading file failed " + data);
             });

@@ -602,6 +602,7 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.selectFile = function(filePath) {
+    console.log('Selected file path : '  + filePath);
     selectedIsFolderArr = [];
     TSCORE.PerspectiveManager.clearSelectedFiles();
     $(this.viewContainer).find('.fileSelection').each(function() {
