@@ -337,27 +337,22 @@ define(function(require, exports, module) {
     } else {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
-    
-    // parse data file
-    var arr = [];
-    this.searchResults.forEach(function(data, index) {
-      arr.push(self.createFileTile(data, false));
-    });
 
-    var context = {
-      extId: this.extensionID,
-      fileList: arr
-    };
+    //var context = {
+    //  extId: this.extensionID,
+    //  fileList: this.searchResults
+    //};
+
     var $viewContainer = this.viewContainer.find('tbody');
 
     // Init Toolbar
-    $viewContainer.html(fileTileTmpl({
-      'fileList' : context.fileList
-    }));
+    this.searchResults.forEach(function(data, index) {
+      self.searchResults[index] = self.createFileTile(data, false);
+    });
 
-    //context.fileList.forEach(function(data, index) {
-    //  $viewContainer.append(self.createFileTile(data, false));
-    //});
+    $viewContainer.html(fileTileTmpl({
+      'fileList' : this.searchResults
+    }));
 
     this.fileTable = $('#' + this.extensionID + "FileTable");
 
@@ -398,7 +393,7 @@ define(function(require, exports, module) {
       //self.reInit(true);
     });
 
-    $("#" + this.extensionID).find('tr').droppable({
+    $("#" + this.extensionID + 'FileTable').find('tr').droppable({
       accept: ".tagButton",
       hoverClass: "activeRow",
       drop: function(event, ui) {
@@ -563,7 +558,7 @@ define(function(require, exports, module) {
         });
       });
     }
-    console.log(context)
+
     return context;
     //return fileTileTmpl(context);
   };
