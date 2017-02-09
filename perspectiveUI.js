@@ -102,19 +102,19 @@ define(function(require, exports, module) {
      '{{#each fileList}}' +
      '<tr class="">' +
        '<td class="byExtension fileTitle noWrap">' +
-        '<button filepath="{{path}}" isdirectory="" title="{{context.fileList.path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-          '<span class="fileExt">{{extension}}' +
+        '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
+          '<span class="fileExt">{{fileext}}' +
            //'<span class="fa {{selected}}"></span>' +
           '</span>' +
           '</button><br>' +
-          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
+          '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
           '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
         '</button>' +
        '</td>' +
        '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
        '<td class="byTagCount fileTitle forceWrap">' +
          '{{#each tags}}' +
-         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
+         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
          '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
          '{{/each}}' +
        '</td>' +
@@ -337,15 +337,16 @@ define(function(require, exports, module) {
     } else {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
-
-    //this.viewContainer.html(tableTmpl({
-    //  extId: this.extensionID,
-    //  //fileList: this.searchResults
-    //}));
+    
+    // parse data file
+    var arr = [];
+    this.searchResults.forEach(function(data, index) {
+      arr.push(self.createFileTile(data, false));
+    });
 
     var context = {
       extId: this.extensionID,
-      fileList: this.searchResults
+      fileList: arr
     };
     var $viewContainer = this.viewContainer.find('tbody');
 
@@ -353,9 +354,10 @@ define(function(require, exports, module) {
     $viewContainer.html(fileTileTmpl({
       'fileList' : context.fileList
     }));
-    context.fileList.forEach(function(data, index) {
-      $viewContainer.append(self.createFileTile(data, false));
-    });
+
+    //context.fileList.forEach(function(data, index) {
+    //  $viewContainer.append(self.createFileTile(data, false));
+    //});
 
     this.fileTable = $('#' + this.extensionID + "FileTable");
 
@@ -517,7 +519,6 @@ define(function(require, exports, module) {
   ExtUI.prototype.createFileTile = function(data, isSelected) {
     //var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(value.path);
     //var fileName = TSCORE.TagUtils.extractFileName(value.path);
-
     var tmbPath = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     var metaObj = data.meta || {thumbnailPath: ""};
 
@@ -562,8 +563,9 @@ define(function(require, exports, module) {
         });
       });
     }
-
-    return fileTileTmpl(context);
+    console.log(context)
+    return context;
+    //return fileTileTmpl(context);
   };
 
   // Helper function user by basic and search views
