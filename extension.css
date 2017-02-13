@@ -131,3 +131,7 @@ table tbody td {
 .fileTitleWidth {
     min-width: 115px !important;
 }
+
+.dropDownIcon {
+    padding-left:5px;
+}

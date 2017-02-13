@@ -102,19 +102,19 @@ define(function(require, exports, module) {
      '{{#each fileList}}' +
      '<tr class="">' +
        '<td class="byExtension fileTitle noWrap">' +
-        '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
+        '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
           '<span class="fileExt">{{fileext}}' +
-           //'<span class="fa {{selected}}"></span>' +
+           '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
           '</span>' +
           '</button><br>' +
-          '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
           '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
         '</button>' +
        '</td>' +
        '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
        '<td class="byTagCount fileTitle forceWrap">' +
          '{{#each tags}}' +
-         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
+         '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
          '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
          '{{/each}}' +
        '</td>' +
@@ -338,10 +338,10 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, orderBy);
     }
 
-    //var context = {
-    //  extId: this.extensionID,
-    //  fileList: this.searchResults
-    //};
+    var context = {
+      extId: this.extensionID,
+      fileList: this.searchResults
+    };
 
     var $viewContainer = this.viewContainer.find('tbody');
 
@@ -525,13 +525,14 @@ define(function(require, exports, module) {
     }
 
     var context = {
-      filepath: data.path,
+      path: data.path,
       fileext: data.extension,
       title: data.title,
       lmdt: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
       size: TSCORE.TagUtils.formatFileSize(data.size, true),
       coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
       tags: [],
+      //folder: isDirectory ? "fa fa-folder-o" : "",
       selected: isSelected ? "fa-check-square" : "fa-square-o",
       thumbPath: tmbPath
     };
@@ -543,7 +544,7 @@ define(function(require, exports, module) {
       for (var i = 0; i < tags.length; i++) {
         context.tags.push({
           tag: tags[i],
-          filepath: data.path,
+          path: data.path,
           style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tags[i]))
         });
       }
@@ -553,7 +554,7 @@ define(function(require, exports, module) {
       metaObj.metaData.tags.forEach(function(elem) {
         context.tags.push({
           tag: elem.title,
-          filepath: data.path,
+          path: data.path,
           style: elem.style
         });
       });
@@ -562,33 +563,6 @@ define(function(require, exports, module) {
     return context;
     //return fileTileTmpl(context);
   };
-
-  // Helper function user by basic and search views
-/*  ExtUI.prototype.buttonizeTitle = function(title, filePath, fileExt, isDirectory, isSelected) {
-    if (title.length < 1) {
-      title = filePath;
-    }
-
-    //TODO minimize platform specific calls
-    var tmbPath;
-    if (isCordova || isWeb) {
-      tmbPath = filePath;
-    } else {
-      tmbPath = "file:///" + filePath;
-    }
-
-    var context = {
-      filepath: filePath,
-      isDirectory: isDirectory,
-      coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
-      tmbpath: tmbPath,
-      fileext: fileExt,
-      folder: isDirectory ? "fa fa-folder-o" : "",
-      selected: isSelected ? "fa-check-square-o" : "fa-square-o"
-    };
-
-    return buttonCompTmpl(context);
-  };*/
 
   ExtUI.prototype.clearSelectedFiles = function() {
     TSCORE.selectedFiles = [];
@@ -753,6 +727,7 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.getNextFile = function(filePath) {
+    console.log(filePath)
     var nextFilePath;
     var self = this;
     this.searchResults.forEach(function(entry, index) {
@@ -856,6 +831,7 @@ define(function(require, exports, module) {
     }
 
     function sortByTagCount(a, b) {
+      console.log(a)
       if (orderBy) {
         return (b.isDirectory - a.isDirectory) || (a.tags.length - b.tags.length);
       } else {

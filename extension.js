@@ -22,7 +22,7 @@ define(function(require, exports, module) {
     extensionLoaded = new Promise(function(resolve, reject) {
       require([
         extensionDirectory + '/perspectiveUI.js',
-        "text!" + extensionDirectory + '/toolbar.html',
+        "text!" + extensionDirectory + '/tamplates.html',
         "css!" + extensionDirectory + '/extension.css',
       ], function(extUI, toolbarTPL, marked) {
 
