@@ -332,7 +332,7 @@ define(function(require, exports, module) {
       }
     }
 
-    if (!orderBy) {
+    if (orderBy === undefined) {
       self.sortByCriteria('byName', true);
     } else {
       self.sortByCriteria(showSortDataInList, orderBy);
@@ -347,7 +347,7 @@ define(function(require, exports, module) {
 
     // Init Toolbar
     this.searchResults.forEach(function(data, index) {
-      self.searchResults[index] = self.createFileTile(data, false);
+      self.searchResults[index] = self.createFileTile(data, false, false);
     });
 
     $viewContainer.html(fileTileTmpl({
@@ -511,7 +511,7 @@ define(function(require, exports, module) {
     TSCORE.hideLoadingAnimation();
   };
 
-  ExtUI.prototype.createFileTile = function(data, isSelected) {
+  ExtUI.prototype.createFileTile = function(data, isDirectory, isSelected) {
     //var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(value.path);
     //var fileName = TSCORE.TagUtils.extractFileName(value.path);
     var tmbPath = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -534,7 +534,8 @@ define(function(require, exports, module) {
       tags: [],
       //folder: isDirectory ? "fa fa-folder-o" : "",
       selected: isSelected ? "fa-check-square" : "fa-square-o",
-      thumbPath: tmbPath
+      thumbPath: tmbPath,
+      isDirectory: isDirectory,
     };
 
     if (data.tags.length > 0) {
@@ -727,7 +728,6 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.getNextFile = function(filePath) {
-    console.log(filePath)
     var nextFilePath;
     var self = this;
     this.searchResults.forEach(function(entry, index) {
@@ -789,9 +789,9 @@ define(function(require, exports, module) {
   ExtUI.prototype.sortByCriteria = function(criteria, orderBy) {
     function sortByName(a, b) {
       if (orderBy) {
-        return (b.isDirectory - a.isDirectory) || (a.name.toString().localeCompare(b.name));
+        return (b.isDirectory - a.isDirectory) || (a.title.toString().localeCompare(b.title));
       } else {
-        return (b.isDirectory - a.isDirectory) || (b.name.toString().localeCompare(a.name));
+        return (b.isDirectory - a.isDirectory) || (b.title.toString().localeCompare(a.title));
       }
     }
 
@@ -831,7 +831,6 @@ define(function(require, exports, module) {
     }
 
     function sortByTagCount(a, b) {
-      console.log(a)
       if (orderBy) {
         return (b.isDirectory - a.isDirectory) || (a.tags.length - b.tags.length);
       } else {
