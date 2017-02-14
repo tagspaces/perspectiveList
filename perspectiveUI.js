@@ -648,7 +648,7 @@ define(function(require, exports, module) {
     var context = {
       title: TSCORE.TagUtils.extractTitle(newFilePath),
       path: newFilePath,
-      fileext: TSCORE.TagUtils.extractFileExtension(newFilePath),
+      extension: TSCORE.TagUtils.extractFileExtension(newFilePath),
       tags: TSCORE.TagUtils.extractTags(newFilePath)
     };
     /*    var title = TSCORE.TagUtils.extractTitle(newFilePath),
@@ -669,7 +669,7 @@ define(function(require, exports, module) {
     }
 
     $($fileRow.find("td")[0]).empty().append(this.createFileTile(context, false, true));
-    $($fileRow.find("td")[1]).text(title);
+    $($fileRow.find("td")[1]).text(context.title);
     $($fileRow.find("td")[2]).empty().append(TSCORE.generateTagButtons(context.tags, newFilePath));
 
     var self = this;
