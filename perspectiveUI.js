@@ -651,9 +651,6 @@ define(function(require, exports, module) {
       extension: TSCORE.TagUtils.extractFileExtension(newFilePath),
       tags: TSCORE.TagUtils.extractTags(newFilePath)
     };
-    /*    var title = TSCORE.TagUtils.extractTitle(newFilePath),
-     fileExt = TSCORE.TagUtils.extractFileExtension(newFilePath),
-     fileTags = TSCORE.TagUtils.extractTags(newFilePath);*/
 
     var $fileRow;
 
@@ -668,7 +665,9 @@ define(function(require, exports, module) {
       $fileRow = $("#" + this.extensionID + "Container button[filepath='" + oldFilePath + "']").parent().parent();
     }
 
-    $($fileRow.find("td")[0]).empty().append(this.createFileTile(context, false, true));
+    $fileRow.find("td button").attr('filepath', context.path);
+    $fileRow.find("td button").attr('title', context.path);
+    $fileRow.find("td button").attr('data-ext', context.extension);
     $($fileRow.find("td")[1]).text(context.title);
     $($fileRow.find("td")[2]).empty().append(TSCORE.generateTagButtons(context.tags, newFilePath));
 
