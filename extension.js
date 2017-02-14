@@ -35,34 +35,6 @@ define(function(require, exports, module) {
         platformTuning();
 
         try {
-          var translation = $.i18n.t("ns.perspectives:fileExtension");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Ext.')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:fileTitle");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Title')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:fileTags");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Tags')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:fileSize");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Size')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:fileLDTM");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('Last Modified')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:filePath");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Path')").text(translation);
-          }
-          translation = $.i18n.t("ns.perspectives:fileName");
-          if (translation.length > 0) {
-            $('#' + extensionID + 'Container').find("th:contains('File Name')").text(translation);
-          }
           $('#' + extensionID + 'Container [data-i18n]').i18n();
 
           //console.log("#aboutExtensionModal: " + document.getElementById("aboutExtensionModal"));
