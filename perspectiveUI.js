@@ -47,8 +47,8 @@ define(function(require, exports, module) {
   }
 
   function SortByName(a, b) {
-    var aName = a.name.toLowerCase();
-    var bName = b.name.toLowerCase();
+    var aName = a.title.toLowerCase();
+    var bName = b.title.toLowerCase();
     return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
   }
 
@@ -107,8 +107,8 @@ define(function(require, exports, module) {
     '{{#each fileList}}' +
     '<tr class="">' +
     '<td class="byExtension fileTitle noWrap">' +
-    '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{fileext}}">' +
-    '<span class="fileExt">{{fileext}}' +
+    '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+    '<span class="fileExt">{{extension}}' +
     '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
     '</span>' +
     '</button><br>' +
@@ -123,8 +123,8 @@ define(function(require, exports, module) {
     '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
     '{{/each}}' +
     '</td>' +
-    '<td class="byFileSize fileTitle">{{size}}</td>' +
-    '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
+    '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
+    '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
     '</tr>' +
     '{{/each}}'
   );
@@ -511,10 +511,12 @@ define(function(require, exports, module) {
 
     var context = {
       path: data.path,
-      fileext: data.extension,
+      extension: data.extension,
       title: data.title,
-      lmdt: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
-      size: TSCORE.TagUtils.formatFileSize(data.size, true),
+      lmdt: data.lmdt,
+      lmdtFormat: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
+      size: data.size,
+      sizeFormat: TSCORE.TagUtils.formatFileSize(data.size, true),
       coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
       tags: [],
       //folder: isDirectory ? "fa fa-folder-o" : "",
@@ -897,9 +899,9 @@ define(function(require, exports, module) {
     $('thead tr th').find("i").removeClass('fa-angle-down').removeClass('fa-angle-up');
     if (orderBy === undefined || orderBy === false) {
       orderBy = true;
-      $('.' + criteria).find($(".fa")).removeClass('fa-angle-down').addClass('fa-angle-up');
+      $('.' + criteria).children("i").removeClass('fa-angle-down').addClass('fa-angle-up');
     } else {
-      $('.' + criteria).find($(".fa")).removeClass('fa-angle-up').addClass('fa-angle-down');
+      $('.' + criteria).children("i").removeClass('fa-angle-up').addClass('fa-angle-down');
       orderBy = false;
     }
   };
