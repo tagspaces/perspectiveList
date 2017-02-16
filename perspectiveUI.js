@@ -896,12 +896,12 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.orderByCriteria = function(criteria) {
-    $('thead tr th').find("i").removeClass('fa-angle-down').removeClass('fa-angle-up');
+    $('thead tr th').find("i").removeClass('fa-long-arrow-down').removeClass('fa-long-arrow-up');
     if (orderBy === undefined || orderBy === false) {
       orderBy = true;
-      $('.' + criteria).children("i").removeClass('fa-angle-down').addClass('fa-angle-up');
+      $('.' + criteria).children("i").removeClass('fa-long-arrow-down').addClass('fa-long-arrow-up');
     } else {
-      $('.' + criteria).children("i").removeClass('fa-angle-up').addClass('fa-angle-down');
+      $('.' + criteria).children("i").removeClass('fa-long-arrow-up').addClass('fa-long-arrow-down');
       orderBy = false;
     }
   };
