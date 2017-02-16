@@ -830,18 +830,18 @@ define(function(require, exports, module) {
       }
     }
 
-    if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
-      var arrFiles = [];
-      for (var inx = 0; inx < this.searchResults.length; inx++) {
-        if (!this.searchResults[inx].isDirectory) {
-          arrFiles.push(this.searchResults[inx]);
-        }
-      }
-      arrFiles = arrFiles.sort(sortByName);
-      this.searchResults = arrFiles;
-    } else {
-      this.searchResults = this.searchResults.sort(sortByName);
-    }
+/*    if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
+     var arrFiles = [];
+     for (var inx = 0; inx < this.searchResults.length; inx++) {
+     if (!this.searchResults[inx].isDirectory) {
+     arrFiles.push(this.searchResults[inx]);
+     }
+     }
+     arrFiles = arrFiles.sort(sortByName);
+     this.searchResults = arrFiles;
+     } else {
+     this.searchResults = this.searchResults.sort(sortByName);
+     }*/
 
     switch (criteria) {
       case "byDirectory":
