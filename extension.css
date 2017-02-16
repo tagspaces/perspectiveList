@@ -46,7 +46,7 @@ table .fileTitle {
   margin: 1px;
   padding: 1px;
   margin-left: 5px;
-  background-color: #515151;
+  /*background-color: #515151;*/
   color: white;
   background-color: gray;
   border-radius: 3px;
@@ -62,20 +62,16 @@ table .fileTitle {
 }
 
 .fileSelection {
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 .fileSelection i {
-  padding-right: 0px;
-  padding-left: 0px;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 
-table.dataTable tr.even {
-    background-color: white;
-}
-
-table.dataTable tr.odd {
+table {
     background-color: white;
 }
 
@@ -83,27 +79,27 @@ table.dataTable tr.odd {
     background: rgba(29, 209, 159, 0.52) !important;
 }
 
-table.dataTable tr.ui-selected {
+table tr.ui-selected {
     color: white;
     background: #1DD19F !important; /* 00b4ff #7BD8FF */
 }
 
-table.dataTable tr.odd td.sorting_1 { background-color: inherit; }
-table.dataTable tr.odd td.sorting_2 { background-color: inherit; }
-table.dataTable tr.odd td.sorting_3 { background-color: inherit; }
-table.dataTable tr.even td.sorting_1 { background-color: inherit; }
-table.dataTable tr.even td.sorting_2 { background-color: inherit; }
-table.dataTable tr.even td.sorting_3 { background-color: inherit; }
+table tr.odd td.sorting_1 { background-color: inherit; }
+table tr.odd td.sorting_2 { background-color: inherit; }
+table tr.odd td.sorting_3 { background-color: inherit; }
+table tr.even td.sorting_1 { background-color: inherit; }
+table tr.even td.sorting_2 { background-color: inherit; }
+table tr.even td.sorting_3 { background-color: inherit; }
 
-table.dataTable thead th {
+table thead th {
     border-bottom: 1px solid lightgray;
 }
 
-table.dataTable tfoot th {
+table tfoot th {
     border-top: 1px solid lightgray;
 }
 
-table.dataTable tbody td {
+table tbody td {
     border-bottom: 1px solid lightgray;
 }
 
@@ -130,4 +126,8 @@ table.dataTable tbody td {
 
 .fileTitleWidth {
     min-width: 115px !important;
+}
+
+.dropDownIcon {
+    padding-left:5px;
 }

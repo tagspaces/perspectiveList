@@ -29,7 +29,7 @@
     <li class="divider"></li>
     <li><a id="aboutButton" data-toggle="modal" data-target="#aboutExtensionModal">
       <i class="fa fa-comment fa-lg fa-fw"></i>&nbsp;<span data-i18n="ns.perspectives:about"></span>
-    </a></li>    
+    </a></li>
   </ul>
 </div>
 <div class="modal" id="aboutExtensionModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -46,4 +46,28 @@
       </div>
     </div>
   </div>
+</div>
+
+<table border="0" cellpadding="0" width="100%" id="perspectiveListFileTable" class="table content disableTextSelection">
+ <thead><tr>
+    <th class="byExtension fileTitle noWrap">
+        <span data-i18n="ns.perspectives:fileExtension"></span>
+        &nbsp;<i class="fa" aria-hidden="true"></i></th>
+    <th class="byName fileTitle forceWrap fileTitleWidth">
+        <span data-i18n="ns.perspectives:fileTitle"></span>
+        &nbsp;<i class="fa" aria-hidden="true"></i></th>
+    <th class="byTags fileTitle forceWrap">
+        <span data-i18n="ns.perspectives:fileTags"></span>
+        &nbsp;<i class="fa" aria-hidden="true"></i></th>
+    <th class="byFileSize fileTitle">
+        <span data-i18n="ns.perspectives:fileSize"></span>
+        &nbsp;<i class="fa" aria-hidden="true"></i></th>
+    <th class="byDateModified fileTitle">
+        <span data-i18n="ns.perspectives:fileLDTM"></span>
+        &nbsp;<i class="fa" aria-hidden="true"></i></th>
+    </tr>
+ </thead>
+ <tbody></tbody>
+ </table><div style="width: 100%; text-align: center; display: none;">
+ <button id="perspectiveList" style="text-align: center; margin-bottom: 10px;" class="btn btn-primary" title="If you are trying to open more then 1000 files, TagSpaces may experience performance issues.">Show all files"</button>
 </div>
