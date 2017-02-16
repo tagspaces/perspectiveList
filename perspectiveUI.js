@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
-  var showSortDataInList = 'byName', orderBy = null;
+  var showSortDataInList = 'byName', orderBy = false;
   var hasFolderInList = false;
   var extSettings = loadExtSettings();
 
@@ -59,50 +59,6 @@ define(function(require, exports, module) {
     return a.isDirectory && !b.isDirectory ? -1 : 1;
   }
 
-  /* var tableTmpl = Handlebars.compile(
-   '<table border="0" cellpadding="0" width="100%" id="{{extId}}" class="table content disableTextSelection">' +
-   '<thead><tr>' +
-   '<th class="byExtension fileTitle noWrap">' +
-   '<i class="fa fa-angle-down" aria-hidden="true"></i>File Ext.</th>' +
-   '<th class="byName fileTitle forceWrap fileTitleWidth">' +
-   '<i class="fa fa-angle-down" aria-hidden="true">Title</th>' +
-   '<th class="byTagCount fileTitle forceWrap">' +
-   '<i class="fa fa-angle-down" aria-hidden="true">Tags</th>' +
-   '<th class="byFileSize fileTitle">' +
-   '<i class="fa fa-angle-down" aria-hidden="true">Size</th>' +
-   '<th class="byDateModified fileTitle">' +
-   '<i class="fa fa-angle-down" aria-hidden="true">Last Modified</th>' +
-   '</tr></thead>' +
-   '<tbody>' +
-   /!*'{{#each fileList}}' +
-   '<tr class="">' +
-   '<td class="byExtension fileTitle noWrap">' +
-   '<button filepath="{{filepath}}" isdirectory="" title="{{filepath}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-   '<span class="fileExt">{{extension}}' +
-   //'<span class="fa {{selected}}"></span>' +
-   '</span>' +
-   '</button><br>' +
-   '<button filepath="{{filepath}}" class="btn btn-link fileSelection">' +
-   '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
-   '</button></td>' +
-   '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
-   '<td class="byTagCount fileTitle forceWrap">' +
-   '{{#each tags}}' +
-   '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{filepath}}" style="{{style}}">{{tag}}' +
-   '<!-- span class="fa fa-ellipsis-v"></span--></button>' +
-   '{{/each}}' +
-   '</td>' +
-   '<td class="byFileSize fileTitle">{{size}}</td>' +
-   '<td class="byDateModified fileTitle">{{lmdt}}</td>' +
-   '</tr>' +
-   '{{/each}}' +*!/
-   '</tbody>' +
-   '</table>' +
-   '<div style="width: 100%; text-align: center; display: none;">' +
-   '<button id="{{extId}}" style="text-align: center; margin-bottom: 10px;" class="btn btn-primary" title="If you are trying to open more then 1000 files, TagSpaces may experience performance issues.">Show all files"</button>' +
-   '</div>'
-   );*/
-
   var fileTileTmpl = Handlebars.compile(
     '{{#each fileList}}' +
     '<tr class="">' +
@@ -117,7 +73,7 @@ define(function(require, exports, module) {
     '</button>' +
     '</td>' +
     '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
-    '<td class="byTagCount fileTitle forceWrap">' +
+    '<td class="byTags fileTitle forceWrap">' +
     '{{#each tags}}' +
     '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
     '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
@@ -247,8 +203,8 @@ define(function(require, exports, module) {
       self.reInit();
     });
 
-    $(".byTagCount").on("click", function() {
-      showSortDataInList = 'byTagCount';
+    $(".byTags").on("click", function() {
+      showSortDataInList = 'byTags';
       saveExtSettings();
       self.reInit();
     });
@@ -318,11 +274,6 @@ define(function(require, exports, module) {
       self.sortByCriteria(showSortDataInList, false);
       self.orderByCriteria(showSortDataInList);
     }
-
-    /*    var context = {
-     extId: this.extensionID,
-     fileList: this.searchResults
-     };*/
 
     var $viewContainer = this.viewContainer.find('tbody');
 
@@ -522,7 +473,7 @@ define(function(require, exports, module) {
       folder: isDirectory ? "fa fa-folder-o" : "",
       selected: isSelected ? "fa-check-square" : "fa-square-o",
       thumbPath: tmbPath,
-      isDirectory: isDirectory,
+      isDirectory: isDirectory
     };
 
     if (data.tags.length > 0) {
@@ -822,7 +773,7 @@ define(function(require, exports, module) {
       }
     }
 
-    function sortByTagCount(a, b) {
+    function sortByTags(a, b) {
       if (orderBy) {
         return (b.isDirectory - a.isDirectory) || (a.tags.toString().localeCompare(b.tags));
       } else {
@@ -887,8 +838,8 @@ define(function(require, exports, module) {
       case "byExtension":
         this.searchResults = this.searchResults.sort(sortByExtension);
         break;
-      case "byTagCount":
-        this.searchResults = this.searchResults.sort(sortByTagCount);
+      case "byTags":
+        this.searchResults = this.searchResults.sort(sortByTags);
         break;
       default:
         this.searchResults = this.searchResults.sort(sortByName);
@@ -899,9 +850,9 @@ define(function(require, exports, module) {
     $('thead tr th').find("i").removeClass('fa-long-arrow-down').removeClass('fa-long-arrow-up');
     if (orderBy === undefined || orderBy === false) {
       orderBy = true;
-      $('.' + criteria).children("i").removeClass('fa-long-arrow-down').addClass('fa-long-arrow-up');
-    } else {
       $('.' + criteria).children("i").removeClass('fa-long-arrow-up').addClass('fa-long-arrow-down');
+    } else {
+      $('.' + criteria).children("i").removeClass('fa-long-arrow-down').addClass('fa-long-arrow-up');
       orderBy = false;
     }
   };
