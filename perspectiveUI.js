@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
-  var showSortDataInList = 'byName', orderBy = false;
+  var showSortDataInList = 'byName', orderBy = null;
   var hasFolderInList = false;
   var extSettings = loadExtSettings();
 
@@ -824,9 +824,9 @@ define(function(require, exports, module) {
 
     function sortByTagCount(a, b) {
       if (orderBy) {
-        return (b.isDirectory - a.isDirectory) || (a.tags.length - b.tags.length);
+        return (b.isDirectory - a.isDirectory) || (a.tags.toString().localeCompare(b.tags));
       } else {
-        return (b.isDirectory - a.isDirectory) || (b.tags.length - a.tags.length);
+        return (b.isDirectory - a.isDirectory) || (b.tags.toString().localeCompare(a.tags));
       }
     }
 

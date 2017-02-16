@@ -71,11 +71,7 @@ table .fileTitle {
 }
 
 
-table tr.even {
-    background-color: white;
-}
-
-table tr.odd {
+table {
     background-color: white;
 }
 
