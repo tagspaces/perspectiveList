@@ -231,35 +231,30 @@ define(function(require, exports, module) {
 
     $(".byName").on("click", function() {
       showSortDataInList = 'byName';
-      self.orderByCriteria('byName');
       saveExtSettings();
       self.reInit();
     });
 
     $(".byExtension").on("click", function() {
       showSortDataInList = 'byExtension';
-      self.orderByCriteria('byExtension');
       saveExtSettings();
       self.reInit();
     });
 
     $(".byFileSize").on("click", function() {
       showSortDataInList = 'byFileSize';
-      self.orderByCriteria('byFileSize');
       saveExtSettings();
       self.reInit();
     });
 
     $(".byTagCount").on("click", function() {
       showSortDataInList = 'byTagCount';
-      self.orderByCriteria('byTagCount');
       saveExtSettings();
       self.reInit();
     });
 
     $(".byDateModified").on("click", function() {
       showSortDataInList = 'byDateModified';
-      self.orderByCriteria('byDateModified');
       saveExtSettings();
       self.reInit();
     });
@@ -316,11 +311,12 @@ define(function(require, exports, module) {
       }
     }
 
-    if (orderBy === undefined) {
-      self.sortByCriteria('byName', true);
-      //self.orderByCriteria('byName');
+    if (orderBy === true) {
+      self.sortByCriteria(showSortDataInList, true);
+      self.orderByCriteria(showSortDataInList);
     } else {
-      self.sortByCriteria(showSortDataInList, orderBy);
+      self.sortByCriteria(showSortDataInList, false);
+      self.orderByCriteria(showSortDataInList);
     }
 
     /*    var context = {
