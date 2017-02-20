@@ -173,11 +173,31 @@ define(function(require, exports, module) {
       TSCORE.showFileCreateDialog();
     });
 
-    $("#" + this.extensionID + "showFoldersInListCheckbox").attr('checked', showFoldersInList);
+    var $showFoldersInList = $("#" + this.extensionID + "showFoldersInListCheckbox");
+    var $hideFoldersInList = $("#" + this.extensionID + "hideFoldersInListCheckbox");
+    if (showFoldersInList) {
+      $hideFoldersInList.show();
+      $showFoldersInList.hide();
+    } else {
+      $hideFoldersInList.hide();
+      $showFoldersInList.show();
+    }
+
+    $showFoldersInList.off();
+    $showFoldersInList.on("click", function(evt) {
+      self.showFoldersInListCheckbox();
+    });
+
+    $hideFoldersInList.off();
+    $hideFoldersInList.on("click", function(evt) {
+      self.hideFoldersInListCheckbox();
+    });
+
+/*    $("#" + this.extensionID + "showFoldersInListCheckbox").attr('checked', showFoldersInList);
     $("#" + this.extensionID + "showFoldersInListCheckbox").on("click", function(evt) {
       showFoldersInList = evt.currentTarget.checked;
       saveExtSettings();
-    });
+    });*/
 
     $("#" + this.extensionID + "CreateDirectoryButton").on("click", function() {
       TSCORE.showCreateDirectoryDialog(TSCORE.currentPath);
@@ -862,6 +882,23 @@ define(function(require, exports, module) {
       orderBy = false;
     }
   };
+
+  ExtUI.prototype.showFoldersInListCheckbox = function() {
+    showFoldersInList = true;
+    TSCORE.navigateToDirectory(TSCORE.currentPath);
+    saveExtSettings();
+    $("#" + this.extensionID + "hideFoldersInListCheckbox").show();
+    $("#" + this.extensionID + "showFoldersInListCheckbox").hide();
+  };
+
+  ExtUI.prototype.hideFoldersInListCheckbox = function() {
+    showFoldersInList = false;
+    TSCORE.navigateToDirectory(TSCORE.currentPath);
+    saveExtSettings();
+    $("#" + this.extensionID + "hideFoldersInListCheckbox").hide();
+    $("#" + this.extensionID + "showFoldersInListCheckbox").show();
+  };
+
 
   exports.ExtUI = ExtUI;
 });
