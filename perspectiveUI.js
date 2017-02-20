@@ -13,7 +13,7 @@ define(function(require, exports, module) {
   var extensionDirectory;
 
   var selectedIsFolderArr = [];
-  var showFoldersInList = false;
+  var showFoldersInList = true;
   var showSortDataInList = 'byName', orderBy = false;
   var hasFolderInList = false;
   var extSettings = loadExtSettings();
@@ -58,44 +58,55 @@ define(function(require, exports, module) {
     return a.isDirectory && !b.isDirectory ? -1 : 1;
   }
 
-  var fileTileTmpl = Handlebars.compile(
+  var entryTileTmpl = Handlebars.compile(
     '{{#each fileList}}' +
-    '<tr class="">' +
-    '<td class="byExtension fileTitle noWrap">' +
-    '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-    '<span class="fileExt">{{extension}}' +
-    '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
-    '</span>' +
-    '</button><br>' +
-    '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
-    '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
-    '</button>' +
-    '</td>' +
-    '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
-    '<td class="byTags fileTitle forceWrap">' +
-    '{{#each tags}}' +
-    '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
-    '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
-    '{{/each}}' +
-    '</td>' +
-    '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
-    '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
-    '</tr>' +
+      '{{#if isDirectory}}' +
+      '<tr class="">' +
+        '<td class="byExtension fileTitle noWrap">' +
+          '<button filepath="{{path}}" isdirectory="isDirectory" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="folder" filepath="{{path}}">' +
+          '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
+          '</span>' +
+          '</button><br>' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
+          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
+          '</button>' +
+        '</td>' +
+        '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
+        '<td class="byTags fileTitle forceWrap">' +
+        '{{#each tags}}' +
+          '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
+          '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
+        '{{/each}}' +
+        '</td>' +
+        '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
+        '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
+      '</tr>' +
+      '{{else}}'+
+      '<tr class="">' +
+        '<td class="byExtension fileTitle noWrap">' +
+          '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<span class="fileExt">{{extension}}' +
+          '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
+          '</span>' +
+          '</button><br>' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
+          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
+          '</button>' +
+        '</td>' +
+        '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
+        '<td class="byTags fileTitle forceWrap">' +
+      '{{#each tags}}' +
+          '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
+          '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
+      '{{/each}}' +
+        '</td>' +
+        '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
+        '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
+      '</tr>' +
+      '{{/if}}' +
     '{{/each}}'
   );
-
-   var folderTileTmpl = Handlebars.compile(
-     '<div title="{{folderpath}}" folderpath="{{folderpath}}" class="fileTile">' +
-     '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="folder" folderpath="{{folderpath}}">' +
-     '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
-     '<div class="tagsInFileTile">' +
-     '{{#each tags}}' +
-     '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" folderpath="{{folderpath}}" style="{{style}}">{{tag}}</button>' +
-     '{{/each}}' +
-     '</div>' +
-     '<div class="titleInFileTile">{{title}}</div>' +
-     '</div>'
-   );
 
   function ExtUI(extID) {
     this.extensionID = extID;
@@ -278,11 +289,15 @@ define(function(require, exports, module) {
 
     // Init Toolbar
     this.searchResults.forEach(function(data, index) {
-      self.searchResults[index] = self.createEntryTile(data, false, false);
+      if(data.isDirectory === false) {
+        self.searchResults[index] = self.createEntryTile(data, false, false);
+      } else {
+        self.searchResults[index] = self.createEntryTile(data, true, false);
+      }
     });
 
     this.viewContainer.off();
-    $viewContainer.empty().html(fileTileTmpl({
+    $viewContainer.empty().html(entryTileTmpl({
       'fileList': this.searchResults
     }));
 
