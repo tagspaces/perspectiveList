@@ -127,7 +127,7 @@ define(function(require, exports, module) {
 
   function selectFile(filePath) {
 
-    return UI.selectFile(filePath);
+    return UI.selectEntry(filePath);
   }
 
   function updateTreeData(fsTreeData) {

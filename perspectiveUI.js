@@ -328,7 +328,7 @@ define(function(require, exports, module) {
     this.viewContainer.on("contextmenu click", ".fileTitleButton", function(e) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
-      self.selectFile($(this).attr("filepath"));
+      self.selectEntry($(this).attr("filepath"));
       if (!$(this).attr("isDirectory")) {
         TSCORE.showContextMenu("#fileMenu", $(this));
       }
@@ -343,7 +343,7 @@ define(function(require, exports, module) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
       TSCORE.PerspectiveManager.clearSelectedFiles();
-      self.selectFile(selEl.attr("filepath"));
+      self.selectEntry(selEl.attr("filepath"));
       TSCORE.showContextMenu("#fileMenu", $(this));
       return false;
     });
@@ -353,7 +353,7 @@ define(function(require, exports, module) {
     this.viewContainer.on("contextmenu click", ".tagButton", function(e) {
       e.preventDefault();
       TSCORE.hideAllDropDownMenus();
-      self.selectFile($(this).attr("filepath"));
+      self.selectEntry($(this).attr("filepath"));
       TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
       TSCORE.showContextMenu("#tagMenu", $(this));
       return false;
@@ -391,7 +391,7 @@ define(function(require, exports, module) {
     }).click(function() {
       console.log("Selecting file...");
       var titleBut = $(this).find(".fileTitleButton");
-      self.selectFile($(titleBut).attr("filepath"));
+      self.selectEntry($(titleBut).attr("filepath"));
     });
 
     if (isCordova) {
@@ -399,7 +399,7 @@ define(function(require, exports, module) {
         console.log("Doubletap & Opening file...");
         var titleBut = $(this).find(".fileTitleButton");
         TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
-        self.selectFile($(titleBut).attr("filepath"));
+        self.selectEntry($(titleBut).attr("filepath"));
       });
     } else {
       this.fileTable.find('tr').on("dblclick", function() {
@@ -411,7 +411,7 @@ define(function(require, exports, module) {
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
         }
 
-        self.selectFile($(titleBut).attr("filepath"));
+        self.selectEntry($(titleBut).attr("filepath"));
       });
     }
 
@@ -423,7 +423,7 @@ define(function(require, exports, module) {
       "revert": true,
       "start": function() {
         console.log("Start dragging -----");
-        self.selectFile($(this).attr("filepath"));
+        self.selectEntry($(this).attr("filepath"));
       }
     });
 
@@ -454,7 +454,7 @@ define(function(require, exports, module) {
       "revert": true,
       "start": function() {
         TSCORE.selectedTag = $(this).attr("tag");
-        self.selectFile($(this).attr("filepath"));
+        self.selectEntry($(this).attr("filepath"));
       }
     });
 
@@ -543,9 +543,11 @@ define(function(require, exports, module) {
     $("#" + this.extensionID + "Container").find("tr").removeClass('ui-selected');
   };
 
-  ExtUI.prototype.selectFile = function(filePath) {
+  ExtUI.prototype.selectEntry = function(filePath) {
     console.log('Selected file path : ' + filePath);
+    selectedIsFolderArr = [];
     TSCORE.PerspectiveManager.clearSelectedFiles();
+
     $(this.viewContainer).find('.fileSelection').each(function() {
       if ($(this).attr("filepath") === filePath) {
         $(this).parent().parent().toggleClass("ui-selected");
@@ -558,13 +560,6 @@ define(function(require, exports, module) {
       }
     });
 
-    this.isDirectory(filePath);
-    this.handleElementActivation();
-  };
-
-  ExtUI.prototype.isDirectory = function(filePath) {
-    console.log('Selected file path : ' + filePath);
-    selectedIsFolderArr = [];
     $(this.viewContainer).find('.fileTitleButton').each(function() {
       if ($(this).attr("filepath") === filePath) {
         if ($(this).attr("isDirectory") === 'true') {
@@ -574,6 +569,7 @@ define(function(require, exports, module) {
         }
       }
     });
+    this.handleElementActivation();
   };
 
   ExtUI.prototype.handleElementActivation = function() {
@@ -671,7 +667,7 @@ define(function(require, exports, module) {
       "revert": true,
       "start": function() {
         TSCORE.selectedTag = $(this).attr("tag");
-        self.selectFile($(this).attr("filepath"));
+        self.selectEntry($(this).attr("filepath"));
       }
     });
 
@@ -702,7 +698,7 @@ define(function(require, exports, module) {
       "revert": true,
       "start": function() {
         //TSCORE.selectedTag = $(this).attr("tag");
-        self.selectFile($(this).attr("filepath"));
+        self.selectEntry($(this).attr("filepath"));
       }
     });
 
