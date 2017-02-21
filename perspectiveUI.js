@@ -551,8 +551,6 @@ define(function(require, exports, module) {
       if ($(this).attr("filepath") === filePath) {
         $(this).parent().parent().toggleClass("ui-selected");
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
-        //TSCORE.selectedFiles.push($(this).attr("filepath"));
-        //selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
         if (!TSCORE.Utils.isVisibleOnScreen(this)) {
           $("#viewContainers").animate({
             scrollTop: $(this).offset().top - $("#perspectiveListContainer").offset().top
