@@ -63,7 +63,7 @@ define(function(require, exports, module) {
       '{{#if isDirectory}}' +
       '<tr class="">' +
         '<td class="byExtension fileTitle noWrap">' +
-          '<button filepath="{{path}}" isdirectory="isDirectory" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
           '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="folder" filepath="{{path}}">' +
           '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
           '</span>' +
@@ -552,11 +552,18 @@ define(function(require, exports, module) {
         $(this).parent().parent().toggleClass("ui-selected");
         $(this).parent().parent().find("i").toggleClass("fa-check-square-o").toggleClass("fa-square-o");
         //TSCORE.selectedFiles.push($(this).attr("filepath"));
-        selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
+        //selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("folderpath")) != "undefined");
         if (!TSCORE.Utils.isVisibleOnScreen(this)) {
           $("#viewContainers").animate({
             scrollTop: $(this).offset().top - $("#perspectiveListContainer").offset().top
           }, 100);
+        }
+      }
+    });
+    $(this.viewContainer).find('.fileTitleButton').each(function() {
+      if ($(this).attr("filepath") === filePath) {
+        if ($(this).attr("isDirectory") === 'true') {
+          selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("filepath")) != "undefined");
         }
       }
     });
