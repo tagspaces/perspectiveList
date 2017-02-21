@@ -13,7 +13,7 @@ define(function(require, exports, module) {
   var extensionDirectory;
 
   var selectedIsFolderArr = [];
-  var showFoldersInList = true;
+  var showFoldersInList = false;
   var showSortDataInList = 'byName', orderBy = false;
   var hasFolderInList = false;
   var extSettings = loadExtSettings();
@@ -30,19 +30,19 @@ define(function(require, exports, module) {
     showSortDataInList = extSettings.showSortDataInList;
   }
 
-  //save settings for perpectiveList
+  //save settings for perspectiveList
   function saveExtSettings() {
     var settings = {
       "showFoldersInList": showFoldersInList,
       "showSortDataInList": showSortDataInList,
       "orderBy": orderBy
     };
-    localStorage.setItem('perpectiveListSettings', JSON.stringify(settings));
+    localStorage.setItem('perspectiveListSettings', JSON.stringify(settings));
   }
 
-  //load settings for perpectiveGrid
+  //load settings for perspectiveList
   function loadExtSettings() {
-    return JSON.parse(localStorage.getItem("perpectiveListSettings"));
+    return JSON.parse(localStorage.getItem("perspectiveListSettings"));
   }
 
   function SortByName(a, b) {
@@ -818,51 +818,7 @@ define(function(require, exports, module) {
       }
     }
 
-    /*    if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
-     var arrFiles = [];
-     for (var inx = 0; inx < this.searchResults.length; inx++) {
-     if (!this.searchResults[inx].isDirectory) {
-     arrFiles.push(this.searchResults[inx]);
-     }
-     }
-     arrFiles = arrFiles.sort(sortByName);
-     this.searchResults = arrFiles;
-     } else {
-     this.searchResults = this.searchResults.sort(sortByName);
-     }*/
-
     switch (criteria) {
-      /*      case "byDirectory":
-       this.searchResults = this.searchResults.sort(sortByIsDirectory);
-       //showFoldersInList = true;
-       if (showFoldersInList && this.searchResults.length > 0 && this.searchResults[0].isDirectory) { //sort by isDirectory and next by names only if in list have folders
-       hasFolderInList = true;
-       var arrFolders = [], arrFiles = [];
-       for (var inx = 0; inx < this.searchResults.length; inx++) {
-       if (this.searchResults[inx].isDirectory) {
-       arrFolders.push(this.searchResults[inx]);
-       } else {
-       arrFiles.push(this.searchResults[inx]);
-       }
-       }
-       arrFolders = arrFolders.sort(sortByName);
-       arrFiles = arrFiles.sort(sortByName);
-       this.searchResults = arrFolders.concat(arrFiles);
-       } else {
-       if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
-       var arrFiles = [];
-       for (var inx = 0; inx < this.searchResults.length; inx++) {
-       if (!this.searchResults[inx].isDirectory) {
-       arrFiles.push(this.searchResults[inx]);
-       }
-       }
-       arrFiles = arrFiles.sort(sortByName);
-       this.searchResults = arrFiles;
-       } else {
-       this.searchResults = this.searchResults.sort(sortByName);
-       }
-       }
-       break;*/
       case "byName":
         this.searchResults = this.searchResults.sort(sortByName);
         break;
@@ -909,7 +865,6 @@ define(function(require, exports, module) {
     $("#" + this.extensionID + "hideFoldersInListCheckbox").hide();
     $("#" + this.extensionID + "showFoldersInListCheckbox").show();
   };
-
 
   exports.ExtUI = ExtUI;
 });
