@@ -558,7 +558,6 @@ define(function(require, exports, module) {
       }
     });
 
-    TSCORE.selectedFiles.push(filePath);
     this.isDirectory(filePath);
     this.handleElementActivation();
   };
@@ -570,6 +569,8 @@ define(function(require, exports, module) {
       if ($(this).attr("filepath") === filePath) {
         if ($(this).attr("isDirectory") === 'true') {
           selectedIsFolderArr[$(this).attr("filepath")] = (typeof($(this).attr("filepath")) != "undefined");
+        } else {
+          TSCORE.selectedFiles.push(filePath);
         }
       }
     });
