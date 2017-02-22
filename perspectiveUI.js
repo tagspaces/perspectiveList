@@ -63,8 +63,8 @@ define(function(require, exports, module) {
       '{{#if isDirectory}}' +
       '<tr class="">' +
         '<td class="byExtension fileTitle noWrap">' +
-          '<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-          '<button class="btn btn-link fileTileSelector {{coloredExtClass}}" data-ext="folder" filepath="{{path}}">' +
+          '<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTileSelector {{coloredExtClass}} fileTitleButton ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          //'<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTileSelector {{coloredExtClass}} ui-draggable ui-draggable-handle" data-ext="folder">' +
           '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
           '</span>' +
           '</button><br>' +
@@ -344,7 +344,9 @@ define(function(require, exports, module) {
       TSCORE.hideAllDropDownMenus();
       TSCORE.PerspectiveManager.clearSelectedFiles();
       self.selectEntry(selEl.attr("filepath"));
-      TSCORE.showContextMenu("#fileMenu", $(this));
+      if (!$(selEl).attr("isDirectory")) {
+        TSCORE.showContextMenu("#fileMenu", $(this));
+      }
       return false;
     });
 
@@ -355,7 +357,9 @@ define(function(require, exports, module) {
       TSCORE.hideAllDropDownMenus();
       self.selectEntry($(this).attr("filepath"));
       TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
-      TSCORE.showContextMenu("#tagMenu", $(this));
+      if (!$(this).attr("isDirectory")) {
+        TSCORE.showContextMenu("#fileMenu", $(this));
+      }
       return false;
     });
 
@@ -709,6 +713,7 @@ define(function(require, exports, module) {
     var self = this;
     this.searchResults.forEach(function(entry, index) {
       if (entry.path === filePath) {
+        console.log(entry)
         var nextIndex = index + 1;
         if (nextIndex < self.searchResults.length) {
           nextFilePath = self.searchResults[nextIndex].path;
