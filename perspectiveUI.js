@@ -710,18 +710,25 @@ define(function(require, exports, module) {
 
   ExtUI.prototype.getNextFile = function(filePath) {
     var nextFilePath;
-    var self = this;
-    this.searchResults.forEach(function(entry, index) {
+    var indexNonDirectory = [];
+
+    this.searchResults.forEach(function(entry) {
+      if (!entry.isDirectory) {
+        indexNonDirectory.push(entry);
+      }
+    });
+
+    indexNonDirectory.forEach(function(entry, index) {
       if (entry.path === filePath) {
-        console.log(entry)
         var nextIndex = index + 1;
-        if (nextIndex < self.searchResults.length) {
-          nextFilePath = self.searchResults[nextIndex].path;
+        if (nextIndex < indexNonDirectory.length) {
+          nextFilePath = indexNonDirectory[nextIndex].path;
         } else {
-          nextFilePath = self.searchResults[0].path;
+          nextFilePath = indexNonDirectory[0].path;
         }
       }
     });
+
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Next file: " + nextFilePath);
     return nextFilePath;
@@ -729,18 +736,25 @@ define(function(require, exports, module) {
 
   ExtUI.prototype.getPrevFile = function(filePath) {
     var prevFilePath;
-    var self = this;
+    var indexNonDirectory = [];
 
-    this.searchResults.forEach(function(entry, index) {
+    this.searchResults.forEach(function(entry) {
+      if (!entry.isDirectory) {
+        indexNonDirectory.push(entry);
+      }
+    });
+
+    indexNonDirectory.forEach(function(entry, index) {
       if (entry.path === filePath) {
         var prevIndex = index - 1;
         if (prevIndex >= 0) {
-          prevFilePath = self.searchResults[prevIndex].path;
+          prevFilePath = indexNonDirectory[prevIndex].path;
         } else {
-          prevFilePath = self.searchResults[self.searchResults.length - 1].path;
+          prevFilePath = indexNonDirectory[indexNonDirectory.length - 1].path;
         }
       }
     });
+
     TSCORE.PerspectiveManager.clearSelectedFiles();
     console.log("Prev file: " + prevFilePath);
     return prevFilePath;
