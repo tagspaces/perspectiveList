@@ -358,7 +358,7 @@ define(function(require, exports, module) {
       self.selectEntry($(this).attr("filepath"));
       TSCORE.openTagMenu(this, $(this).attr("tag"), $(this).attr("filepath"));
       if (!$(this).attr("isDirectory")) {
-        TSCORE.showContextMenu("#fileMenu", $(this));
+        TSCORE.showContextMenu("#tagMenu", $(this));
       }
       return false;
     });
