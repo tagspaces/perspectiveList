@@ -130,11 +130,6 @@ define(function(require, exports, module) {
     return UI.selectEntry(filePath);
   }
 
-  function updateTreeData(fsTreeData) {
-
-    console.log("Updating tree data not implemented");
-  }
-
   function setReadOnly(filePath) {
     //$('#tagMenuEditTag').hide();
     //$('#tagTreeMenuEditTag').hide();
@@ -161,6 +156,5 @@ define(function(require, exports, module) {
   exports.selectFile = selectFile;
   exports.removeFileUI = removeFileUI;
   exports.updateFileUI = updateFileUI;
-  exports.updateTreeData = updateTreeData;
   exports.setReadOnly = setReadOnly;
 });
