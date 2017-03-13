@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2016 The TagSpaces Authors.
+/* Copyright (c) 2013-2017 The TagSpaces Authors.
  * Use of this source code is governed by the MIT license which can be found in the LICENSE.txt file. */
 
 /* global define, Handlebars, isWin, Mousetrap  */
@@ -9,6 +9,7 @@ define(function(require, exports, module) {
 
   var TSCORE = require("tscore");
   var saveAs = require("libs/filesaver.js/FileSaver.min");
+  var moment = require('moment');
 
   var extensionDirectory;
 
@@ -61,15 +62,12 @@ define(function(require, exports, module) {
   var entryTileTmpl = Handlebars.compile(
     '{{#each fileList}}' +
       '{{#if isDirectory}}' +
-      '<tr class="">' +
+      '<tr>' +
         '<td class="byExtension fileTitle noWrap">' +
-          '<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTileSelector {{coloredExtClass}} fileTitleButton ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
-          //'<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTileSelector {{coloredExtClass}} ui-draggable ui-draggable-handle" data-ext="folder">' +
-          '<i class="fa fa-folder-o fa-lg"></i><!--span class="fileExtTile">{{title}}</span--></button>' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection"><i class="fa fa-fw fa-lg {{selected}}"></i></button>' +
+          '<button filepath="{{path}}" isdirectory="true" title="{{path}}" class="btn btn-link fileTileSelector {{coloredExtClass}} fileTitleButton folderButton ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
+          '<i class="fa fa-folder fa-lg"></i></button>' +
           '</span>' +
-          '</button><br>' +
-          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
-          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
           '</button>' +
         '</td>' +
         '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
@@ -80,18 +78,16 @@ define(function(require, exports, module) {
         '{{/each}}' +
         '</td>' +
         '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
-        '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
+        '<td class="byDateModified fileTitle" title="{{dateTime}}">{{dateTimeFromNow}}</td>' +
       '</tr>' +
       '{{else}}'+
-      '<tr class="">' +
+      '<tr>' +
         '<td class="byExtension fileTitle noWrap">' +
+          '<button filepath="{{path}}" class="btn btn-link fileSelection"><i class="fa fa-fw fa-lg {{selected}}"></i></button>' +
           '<button filepath="{{path}}" isdirectory="" title="{{path}}" class="btn btn-link fileTitleButton fileExtColor ui-draggable ui-draggable-handle" data-ext="{{extension}}">' +
           '<span class="fileExt">{{extension}}' +
-          '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
+            '<span class="fa fa-ellipsis-v dropDownIcon"></span>' +
           '</span>' +
-          '</button><br>' +
-          '<button filepath="{{path}}" class="btn btn-link fileSelection">' +
-          '<i class="fa fa-fw fa-lg {{selected}}"></i>' +
           '</button>' +
         '</td>' +
         '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
@@ -102,7 +98,7 @@ define(function(require, exports, module) {
       '{{/each}}' +
         '</td>' +
         '<td class="byFileSize fileTitle">{{sizeFormat}}</td>' +
-        '<td class="byDateModified fileTitle">{{lmdtFormat}}</td>' +
+        '<td class="byDateModified fileTitle" title="{{dateTime}}">{{dateTimeFromNow}}</td>' +
       '</tr>' +
       '{{/if}}' +
     '{{/each}}'
@@ -192,12 +188,6 @@ define(function(require, exports, module) {
     $hideFoldersInList.on("click", function(evt) {
       self.hideFoldersInListCheckbox();
     });
-
-/*    $("#" + this.extensionID + "showFoldersInListCheckbox").attr('checked', showFoldersInList);
-    $("#" + this.extensionID + "showFoldersInListCheckbox").on("click", function(evt) {
-      showFoldersInList = evt.currentTarget.checked;
-      saveExtSettings();
-    });*/
 
     $("#" + this.extensionID + "CreateDirectoryButton").on("click", function() {
       TSCORE.showCreateDirectoryDialog(TSCORE.currentPath);
@@ -364,7 +354,7 @@ define(function(require, exports, module) {
     });
 
     $("#" + this.extensionID + "ShowAllResults").on("click", function() {
-      //self.reInit(true);
+      self.reInit(true);
     });
 
     $("#" + this.extensionID + 'FileTable').find('tr').droppable({
@@ -503,7 +493,8 @@ define(function(require, exports, module) {
       extension: data.extension,
       title: data.title,
       lmdt: data.lmdt,
-      lmdtFormat: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
+      dateTime: TSCORE.TagUtils.formatDateTime(data.lmdt, true),
+      dateTimeFromNow: moment(data.lmdt).fromNow(),
       size: data.size,
       sizeFormat: TSCORE.TagUtils.formatFileSize(data.size, true),
       coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",

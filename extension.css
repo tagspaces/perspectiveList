@@ -1,12 +1,20 @@
 /*.perspectiveListContainer*/
 table th.fileTitle {
-    padding-left: 8px !important;
     white-space: nowrap;
 }
 
+table th.byExtension {
+    padding-left: 4px !important;
+}
+
+
 table .fileTitle {
-    font-size: 14px;
+    font-size: 13px;
     padding-left: 0 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    padding-right: 3px !important;
+    vertical-align: middle !important;
 }
 
 .fileTitleWidth {
@@ -35,39 +43,45 @@ table .fileTitle {
 }
 
 .fileExt {
-  background-color: inherit;
-  color: inherit;
-  text-transform: uppercase;
-  font-size: 12px;
-  padding: 4px;
+    background-color: inherit;
+    color: inherit;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 4px;
 }
 
 .fileTitleButton {
-  margin: 1px;
-  padding: 1px;
-  margin-left: 5px;
-  /*background-color: #515151;*/
-  color: white;
-  background-color: gray;
-  border-radius: 3px;
-  opacity: 0.8 !important;
-  /*mix-blend-mode: darken;*/
+    margin: 1px;
+    padding: 1px;
+    margin-left: 5px;
+    color: white;
+    background-color: gray;
+    border-radius: 3px;
+    opacity: 0.8 !important;
+}
+
+.folderButton {
+    width: 40px;
+    color: white !important;
+    background-color: tranparent;
 }
 
 .fileTitleButton:hover, .fileTitleButton:active, .fileTitleButton:focus  {
-  background-color: #515151;
-  color: white;
-  border-radius: 3px;
-  opacity: 1 !important;
+    background-color: #515151;
+    color: white;
+    border-radius: 3px;
+    opacity: 1 !important;
 }
 
 .fileSelection {
-  margin-left: 0;
+    margin-left: 0;
+    padding-left: 10px;
+    padding-right: 5px;
 }
 
 .fileSelection i {
-  padding-right: 0;
-  padding-left: 0;
+    padding-right: 0;
+    padding-left: 0;
 }
 
 
