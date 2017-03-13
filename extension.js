@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2016 The TagSpaces Authors.
+/* Copyright (c) 2013-2017 The TagSpaces Authors.
  * Use of this source code is governed by the MIT license which can be found in the LICENSE.txt file. */
 
 /* global define, Handlebars  */
@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
   var extensionTitle = "List"; // should be equal to the name in the bower.json
   var extensionID = "perspectiveList"; // ID should be equal to the directory name where the ext. is located   
-  var extensionIcon = "fa fa-list-ul"; // icon class from font awesome
+  var extensionIcon = "fa fa-list-ul"; // icon class from font-awesome
 
   console.log("Loading " + extensionID);
 
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
         extensionDirectory + '/perspectiveUI.js',
         "text!" + extensionDirectory + '/tamplates.html',
         "css!" + extensionDirectory + '/extension.css',
-      ], function(extUI, toolbarTPL, marked) {
+      ], function(extUI, toolbarTPL) {
 
         var toolbarTemplate = Handlebars.compile(toolbarTPL);
         UI = new extUI.ExtUI(extensionID);
@@ -43,13 +43,8 @@ define(function(require, exports, module) {
               url: extensionDirectory + '/README.md',
               type: 'GET'
             }).done(function(mdData) {
-              //console.log("DATA: " + mdData);
-              //if (marked) {
               var modalBody = $("#aboutExtensionModal .modal-body");
               TSCORE.Utils.setMarkDownContent(modalBody, mdData);
-              //} else {
-              //  console.log("markdown to html transformer not found");
-              //}
             }).fail(function(data) {
               console.warn("Loading file failed " + data);
             });
@@ -59,17 +54,6 @@ define(function(require, exports, module) {
           console.log("Translating extension failed.");
         }
         resolve(true);
-      });
-    });
-  }
-
-  function handleLinks($element) {
-    $element.find("a[href]").each(function() {
-      var currentSrc = $(this).attr("href");
-      $(this).bind('click', function(e) {
-        e.preventDefault();
-        var msg = {command: "openLinkExternally", link: currentSrc};
-        window.parent.postMessage(JSON.stringify(msg), "*");
       });
     });
   }
@@ -106,27 +90,22 @@ define(function(require, exports, module) {
   }
 
   function removeFileUI(filePath) {
-
     UI.removeFileUI(filePath);
   }
 
   function updateFileUI(oldFilePath, newFilePath) {
-
     UI.updateFileUI(oldFilePath, newFilePath);
   }
 
   function getNextFile(filePath) {
-
     return UI.getNextFile(filePath);
   }
 
   function getPrevFile(filePath) {
-
     return UI.getPrevFile(filePath);
   }
 
   function selectFile(filePath) {
-
     return UI.selectEntry(filePath);
   }
 
