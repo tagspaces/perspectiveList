@@ -1,14 +1,45 @@
-/*.perspectiveListContainer*/
-table th.fileTitle {
+#perspectiveListContainer table th.fileTitle {
     white-space: nowrap;
 }
 
-table th.byExtension {
+#perspectiveListContainer table th.byExtension {
     padding-left: 4px !important;
 }
 
+#perspectiveListContainer table {
+    background-color: white;
+}
 
-table .fileTitle {
+#perspectiveListContainer .activeRow {
+    background: rgba(29, 209, 159, 0.52) !important;
+}
+
+#perspectiveListContainer table tr.ui-selected {
+    color: white;
+    background: #1DD19F !important; /* 00b4ff #7BD8FF */
+}
+
+#perspectiveListContainer thead th {
+    border-bottom: 1px solid lightgray;
+}
+
+#perspectiveListContainer tfoot th {
+    border-top: 1px solid lightgray;
+}
+
+#perspectiveListContainer tbody td {
+    border-bottom: 1px solid lightgray;
+}
+
+/*#perspectiveListContainer thead, tbody { display: block; }
+
+#perspectiveListContainer tbody {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}*/
+
+#perspectiveListContainer .fileTitle {
     font-size: 13px;
     padding-left: 0 !important;
     padding-top: 3px !important;
@@ -17,11 +48,11 @@ table .fileTitle {
     vertical-align: middle !important;
 }
 
-.fileTitleWidth {
+#perspectiveListContainer .fileTitleWidth {
     min-width: 110px;
 }
 
-.extTagButton {
+#perspectiveListContainer .extTagButton {
     padding: 2px 4px 2px 4px;
     background: #bbb !important;
     color: white !important;
@@ -31,7 +62,7 @@ table .fileTitle {
     text-decoration: none;
 }
 
-.fileButton {
+#perspectiveListContainer .fileButton {
     padding: 1px 12px 1px 1px;
     background-color: #E5E5E5;
     font-weight: normal;
@@ -42,7 +73,7 @@ table .fileTitle {
     z-index: 9999;
 }
 
-.fileExt {
+#perspectiveListContainer .fileExt {
     background-color: inherit;
     color: inherit;
     text-transform: uppercase;
@@ -50,7 +81,7 @@ table .fileTitle {
     padding: 4px;
 }
 
-.fileTitleButton {
+#perspectiveListContainer .fileTitleButton {
     margin: 1px;
     padding: 1px;
     margin-left: 5px;
@@ -60,88 +91,39 @@ table .fileTitle {
     opacity: 0.8 !important;
 }
 
-.folderButton {
+#perspectiveListContainer .folderButton {
     width: 40px;
     color: white !important;
     background-color: tranparent;
 }
 
-.fileTitleButton:hover, .fileTitleButton:active, .fileTitleButton:focus  {
+#perspectiveListContainer .fileTitleButton:hover, #perspectiveListContainer .fileTitleButton:active, #perspectiveListContainer .fileTitleButton:focus  {
     background-color: #515151;
     color: white;
     border-radius: 3px;
     opacity: 1 !important;
 }
 
-.fileSelection {
+#perspectiveListContainer .fileSelection {
     margin-left: 0;
     padding-left: 10px;
     padding-right: 5px;
 }
 
-.fileSelection i {
+#perspectiveListContainer .fileSelection i {
     padding-right: 0;
     padding-left: 0;
 }
 
-
-table {
-    background-color: white;
-}
-
-.activeRow {
-    background: rgba(29, 209, 159, 0.52) !important;
-}
-
-table tr.ui-selected {
-    color: white;
-    background: #1DD19F !important; /* 00b4ff #7BD8FF */
-}
-
-table tr.odd td.sorting_1 { background-color: inherit; }
-table tr.odd td.sorting_2 { background-color: inherit; }
-table tr.odd td.sorting_3 { background-color: inherit; }
-table tr.even td.sorting_1 { background-color: inherit; }
-table tr.even td.sorting_2 { background-color: inherit; }
-table tr.even td.sorting_3 { background-color: inherit; }
-
-table thead th {
-    border-bottom: 1px solid lightgray;
-}
-
-table tfoot th {
-    border-top: 1px solid lightgray;
-}
-
-table tbody td {
-    border-bottom: 1px solid lightgray;
-}
-
-#aboutExtensionModal img {
-    max-width: 100%;
-}
-
-#aboutExtensionModal h1 {
-    font-size: 22px;
-}
-
-#aboutExtensionModal h2 {
-    font-size: 20px;
-}
-
-#aboutExtensionModal h3 {
-    font-size: 18px;
-}
-
-#aboutExtensionModal .modal-body {
+#perspectiveListContainer #aboutExtensionModal .modal-body {
     max-height: 500px;
     overflow: auto;
 }
 
-.fileTitleWidth {
+#perspectiveListContainer .fileTitleWidth {
     min-width: 115px !important;
 }
 
-.dropDownIcon {
+#perspectiveListContainer .dropDownIcon {
     padding-left:5px;
 }
