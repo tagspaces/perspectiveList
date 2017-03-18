@@ -8,14 +8,14 @@ define(function(require, exports, module) {
   console.log("Loading UI for perspectiveList");
 
   var TSCORE = require("tscore");
-  var saveAs = require("libs/filesaver.js/FileSaver.min");
   var moment = require('moment');
 
   var extensionDirectory;
 
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
-  var showSortDataInList = 'byName', orderBy = false;
+  var showSortDataInList = 'byName';
+  var orderBy = false;
   var hasFolderInList = false;
   var extSettings = loadExtSettings();
 
@@ -158,7 +158,7 @@ define(function(require, exports, module) {
       var blob = new Blob([TSCORE.exportFileListCSV(TSCORE.fileList)], {
         type: "text/csv;charset=utf-8"
       });
-      saveAs(blob, "Export.csv");
+      TSCORE.Utils.saveAsTextFile(blob, "Export.csv");
     });
 
     $("#" + this.extensionID + "ReloadFolderButton").on("click", function() {
