@@ -4,6 +4,7 @@
 
 #perspectiveListContainer table th.byExtension {
     padding-left: 4px !important;
+    width: 100px;
 }
 
 #perspectiveListContainer table {
