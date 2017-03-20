@@ -849,11 +849,13 @@ define(function(require, exports, module) {
   ExtUI.prototype.orderByCriteria = function(criteria) {
     $('thead tr th').find("i").removeClass('fa-long-arrow-down').removeClass('fa-long-arrow-up');
     if (orderBy === undefined || orderBy === false) {
-      orderBy = true;
       $('.' + criteria).children("i").removeClass('fa-long-arrow-up').addClass('fa-long-arrow-down');
+      orderBy = true;
+      saveExtSettings();
     } else {
       $('.' + criteria).children("i").removeClass('fa-long-arrow-down').addClass('fa-long-arrow-up');
       orderBy = false;
+      saveExtSettings();
     }
   };
 
