@@ -11,39 +11,36 @@ define(function(require, exports, module) {
   var moment = require('moment');
 
   var extensionDirectory;
-
   var selectedIsFolderArr = [];
   var showFoldersInList = false;
-  var showSortDataInList = 'byName';
-  var orderBy = false;
+  var sortListCriteria = 'byName';
+  var orderListAscDesc = true;
   var hasFolderInList = false;
-  var extSettings = loadExtSettings();
 
-  if (extSettings && extSettings.showFoldersInList) {
-    showFoldersInList = extSettings.showFoldersInList;
-  }
+  loadExtSettings();
 
-  if (extSettings && extSettings.orderBy) {
-    orderBy = extSettings.orderBy;
-  }
-
-  if (extSettings && extSettings.showSortDataInList) {
-    showSortDataInList = extSettings.showSortDataInList;
-  }
-
-  //save settings for perspectiveList
   function saveExtSettings() {
     var settings = {
       "showFoldersInList": showFoldersInList,
-      "showSortDataInList": showSortDataInList,
-      "orderBy": orderBy
+      "sortListCriteria": sortListCriteria,
+      "orderListAscDesc": orderListAscDesc
     };
     localStorage.setItem('perspectiveListSettings', JSON.stringify(settings));
   }
 
-  //load settings for perspectiveList
   function loadExtSettings() {
-    return JSON.parse(localStorage.getItem("perspectiveListSettings"));
+    var extSettings = JSON.parse(localStorage.getItem("perspectiveListSettings"));
+    if (extSettings) {
+      if (extSettings.showFoldersInList) {
+        showFoldersInList = extSettings.showFoldersInList;
+      }
+      if (extSettings.orderListAscDesc) {
+        orderListAscDesc = extSettings.orderListAscDesc;
+      }
+      if (extSettings.sortListCriteria) {
+        sortListCriteria = extSettings.sortListCriteria;
+      }
+    }
   }
 
   function SortByName(a, b) {
@@ -108,9 +105,7 @@ define(function(require, exports, module) {
     this.extensionID = extID;
     this.viewContainer = $("#" + this.extensionID + "Container").empty();
     this.viewToolbar = $("#" + this.extensionID + "Toolbar").empty();
-
     this.searchResults = [];
-
     extensionDirectory = TSCORE.Config.getExtensionPath() + "/" + this.extensionID;
   }
 
@@ -206,31 +201,36 @@ define(function(require, exports, module) {
     // Init Sorting
 
     $(".byName").on("click", function() {
-      showSortDataInList = 'byName';
+      sortListCriteria = 'byName';
+      orderListAscDesc = !orderListAscDesc;
       saveExtSettings();
       self.reInit();
     });
 
     $(".byExtension").on("click", function() {
-      showSortDataInList = 'byExtension';
+      sortListCriteria = 'byExtension';
+      orderListAscDesc = !orderListAscDesc;
       saveExtSettings();
       self.reInit();
     });
 
     $(".byFileSize").on("click", function() {
-      showSortDataInList = 'byFileSize';
+      sortListCriteria = 'byFileSize';
+      orderListAscDesc = !orderListAscDesc;
       saveExtSettings();
       self.reInit();
     });
 
     $(".byTags").on("click", function() {
-      showSortDataInList = 'byTags';
+      sortListCriteria = 'byTags';
+      orderListAscDesc = !orderListAscDesc;
       saveExtSettings();
       self.reInit();
     });
 
     $(".byDateModified").on("click", function() {
-      showSortDataInList = 'byDateModified';
+      sortListCriteria = 'byDateModified';
+      orderListAscDesc = !orderListAscDesc;
       saveExtSettings();
       self.reInit();
     });
@@ -287,13 +287,8 @@ define(function(require, exports, module) {
       }
     }
 
-    if (orderBy === true) {
-      self.sortByCriteria(showSortDataInList, true);
-      self.orderByCriteria(showSortDataInList);
-    } else {
-      self.sortByCriteria(showSortDataInList, false);
-      self.orderByCriteria(showSortDataInList);
-    }
+    this.sortByCriteria(sortListCriteria);
+    this.orderByCriteria(sortListCriteria);
 
     var $viewContainer = this.viewContainer.find('tbody');
 
@@ -773,9 +768,9 @@ define(function(require, exports, module) {
     this.handleElementActivation();
   };
 
-  ExtUI.prototype.sortByCriteria = function(criteria, orderBy) {
+  ExtUI.prototype.sortByCriteria = function(criteria) {
     function sortByName(a, b) {
-      if (orderBy) {
+      if (orderListAscDesc) {
         return (b.isDirectory - a.isDirectory) || (a.title.toString().localeCompare(b.title));
       } else {
         return (b.isDirectory - a.isDirectory) || (b.title.toString().localeCompare(a.title));
@@ -786,7 +781,7 @@ define(function(require, exports, module) {
       if (b.isDirectory && a.isDirectory) {
         return 0;
       }
-      //if (orderBy) {
+      //if (orderListAscDesc) {
       return a.isDirectory && !b.isDirectory ? -1 : 1;
       //} else {
       //  return a.isDirectory && !b.isDirectory ? 1 : -1;
@@ -794,7 +789,7 @@ define(function(require, exports, module) {
     }
 
     function sortBySize(a, b) {
-      if (orderBy) {
+      if (orderListAscDesc) {
         return (b.isDirectory - a.isDirectory) || (a.size - b.size);
       } else {
         return (b.isDirectory - a.isDirectory) || (b.size - a.size);
@@ -802,7 +797,7 @@ define(function(require, exports, module) {
     }
 
     function sortByDateModified(a, b) {
-      if (orderBy) {
+      if (orderListAscDesc) {
         return (b.isDirectory - a.isDirectory) || (a.lmdt - b.lmdt);
       } else {
         return (b.isDirectory - a.isDirectory) || (b.lmdt - a.lmdt);
@@ -810,7 +805,7 @@ define(function(require, exports, module) {
     }
 
     function sortByExtension(a, b) {
-      if (orderBy) {
+      if (orderListAscDesc) {
         return (b.isDirectory - a.isDirectory) || (a.extension.toString().localeCompare(b.extension));
       } else {
         return (b.isDirectory - a.isDirectory) || (b.extension.toString().localeCompare(a.extension));
@@ -818,7 +813,7 @@ define(function(require, exports, module) {
     }
 
     function sortByTags(a, b) {
-      if (orderBy) {
+      if (orderListAscDesc) {
         return (b.isDirectory - a.isDirectory) || (a.tags.toString().localeCompare(b.tags));
       } else {
         return (b.isDirectory - a.isDirectory) || (b.tags.toString().localeCompare(a.tags));
@@ -848,14 +843,10 @@ define(function(require, exports, module) {
 
   ExtUI.prototype.orderByCriteria = function(criteria) {
     $('thead tr th').find("i").removeClass('fa-long-arrow-down').removeClass('fa-long-arrow-up');
-    if (orderBy === undefined || orderBy === false) {
-      $('.' + criteria).children("i").removeClass('fa-long-arrow-up').addClass('fa-long-arrow-down');
-      orderBy = true;
-      saveExtSettings();
-    } else {
+    if (orderListAscDesc) {
       $('.' + criteria).children("i").removeClass('fa-long-arrow-down').addClass('fa-long-arrow-up');
-      orderBy = false;
-      saveExtSettings();
+    } else {
+      $('.' + criteria).children("i").removeClass('fa-long-arrow-up').addClass('fa-long-arrow-down');
     }
   };
 
