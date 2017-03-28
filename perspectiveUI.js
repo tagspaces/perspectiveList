@@ -43,18 +43,53 @@ define(function(require, exports, module) {
     }
   }
 
-  function SortByName(a, b) {
-    var aName = a.title.toLowerCase();
-    var bName = b.title.toLowerCase();
-    return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+  function sortByName(a, b) {
+    if (orderListAscDesc) {
+      return (b.isDirectory - a.isDirectory) || (a.title.toString().localeCompare(b.title));
+    } else {
+      return (b.isDirectory - a.isDirectory) || (b.title.toString().localeCompare(a.title));
+    }
   }
 
-  function SortByIsDirectory(a, b) {
+  function sortByIsDirectory(a, b) {
     if (b.isDirectory && a.isDirectory) {
       return 0;
     }
     return a.isDirectory && !b.isDirectory ? -1 : 1;
   }
+
+  function sortBySize(a, b) {
+    if (orderListAscDesc) {
+      return (b.isDirectory - a.isDirectory) || (a.size - b.size);
+    } else {
+      return (b.isDirectory - a.isDirectory) || (b.size - a.size);
+    }
+  }
+
+  function sortByDateModified(a, b) {
+    if (orderListAscDesc) {
+      return (b.isDirectory - a.isDirectory) || (a.lmdt - b.lmdt);
+    } else {
+      return (b.isDirectory - a.isDirectory) || (b.lmdt - a.lmdt);
+    }
+  }
+
+  function sortByExtension(a, b) {
+    if (orderListAscDesc) {
+      return (b.isDirectory - a.isDirectory) || (a.extension.toString().localeCompare(b.extension));
+    } else {
+      return (b.isDirectory - a.isDirectory) || (b.extension.toString().localeCompare(a.extension));
+    }
+  }
+
+  function sortByTags(a, b) {
+    if (orderListAscDesc) {
+      return (b.isDirectory - a.isDirectory) || (a.tags.toString().localeCompare(b.tags));
+    } else {
+      return (b.isDirectory - a.isDirectory) || (b.tags.toString().localeCompare(a.tags));
+    }
+  }
+
 
   var entryTileTmpl = Handlebars.compile(
     '{{#each fileList}}' +
@@ -257,7 +292,10 @@ define(function(require, exports, module) {
     }
 
     //sort by isDirectory in order to show folders on the top of the list
-    this.searchResults = this.searchResults.sort(SortByIsDirectory);
+    if (this.searchResults && this.searchResults.sort) {
+      this.searchResults = this.searchResults.sort(sortByIsDirectory);
+    }
+
 
     if (showFoldersInList && this.searchResults.length > 0 && this.searchResults[0].isDirectory) { //sort by isDirectory and next by names only if in list have folders
       hasFolderInList = true;
@@ -269,8 +307,8 @@ define(function(require, exports, module) {
           arrFiles.push(this.searchResults[inx]);
         }
       }
-      arrFolders = arrFolders.sort(SortByName);
-      arrFiles = arrFiles.sort(SortByName);
+      arrFolders = arrFolders.sort(sortByName);
+      arrFiles = arrFiles.sort(sortByName);
       this.searchResults = arrFolders.concat(arrFiles);
     } else {
       if (this.searchResults.length > 0 && this.searchResults[0].isDirectory) {
@@ -280,10 +318,8 @@ define(function(require, exports, module) {
             arrFiles.push(this.searchResults[inx]);
           }
         }
-        arrFiles = arrFiles.sort(SortByName);
+        arrFiles = arrFiles.sort(sortByName);
         this.searchResults = arrFiles;
-      } else {
-        this.searchResults = this.searchResults.sort(SortByName);
       }
     }
 
@@ -293,13 +329,15 @@ define(function(require, exports, module) {
     var $viewContainer = this.viewContainer.find('tbody');
 
     // Init Toolbar
-    this.searchResults.forEach(function(data, index) {
-      if(data.isDirectory === false) {
-        self.searchResults[index] = self.createEntryTile(data, false, false);
-      } else {
-        self.searchResults[index] = self.createEntryTile(data, true, false);
-      }
-    });
+    if(this.searchResults && this.searchResults.length > 0) {
+      this.searchResults.forEach(function(data, index) {
+        if(data.isDirectory) {
+          self.searchResults[index] = self.createEntryTile(data, true, false);
+        } else {
+          self.searchResults[index] = self.createEntryTile(data, false, false);
+        }
+      });
+    }
 
     this.viewContainer.off();
     $viewContainer.empty().html(entryTileTmpl({
@@ -500,17 +538,18 @@ define(function(require, exports, module) {
       isDirectory: isDirectory
     };
 
-    if (data.tags.length > 0) {
-      var tagString = "" + data.tags;
-      var tags = tagString.split(",");
-
-      for (var i = 0; i < tags.length; i++) {
-        context.tags.push({
-          tag: tags[i],
-          path: data.path,
-          style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tags[i]))
-        });
-      }
+    if (data.tags && data.tags.length > 0) {
+      data.tags.forEach(function(tag) {
+        if((typeof tag) === 'string') {
+          context.tags.push({
+            tag: tag,
+            path: data.path,
+            style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tag))
+          });
+        } else {
+          context.tags.push(tag);
+        }
+      });
     }
 
     if (metaObj.metaData && metaObj.metaData.tags) {
@@ -769,75 +808,26 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.sortByCriteria = function(criteria) {
-    function sortByName(a, b) {
-      if (orderListAscDesc) {
-        return (b.isDirectory - a.isDirectory) || (a.title.toString().localeCompare(b.title));
-      } else {
-        return (b.isDirectory - a.isDirectory) || (b.title.toString().localeCompare(a.title));
+    if(this.searchResults && this.searchResults.sort) {
+      switch (criteria) {
+        case "byName":
+          this.searchResults = this.searchResults.sort(sortByName);
+          break;
+        case "byFileSize":
+          this.searchResults = this.searchResults.sort(sortBySize);
+          break;
+        case "byDateModified":
+          this.searchResults = this.searchResults.sort(sortByDateModified);
+          break;
+        case "byExtension":
+          this.searchResults = this.searchResults.sort(sortByExtension);
+          break;
+        case "byTags":
+          this.searchResults = this.searchResults.sort(sortByTags);
+          break;
+        default:
+          this.searchResults = this.searchResults.sort(sortByName);
       }
-    }
-
-    function sortByIsDirectory(a, b) {
-      if (b.isDirectory && a.isDirectory) {
-        return 0;
-      }
-      //if (orderListAscDesc) {
-      return a.isDirectory && !b.isDirectory ? -1 : 1;
-      //} else {
-      //  return a.isDirectory && !b.isDirectory ? 1 : -1;
-      //}
-    }
-
-    function sortBySize(a, b) {
-      if (orderListAscDesc) {
-        return (b.isDirectory - a.isDirectory) || (a.size - b.size);
-      } else {
-        return (b.isDirectory - a.isDirectory) || (b.size - a.size);
-      }
-    }
-
-    function sortByDateModified(a, b) {
-      if (orderListAscDesc) {
-        return (b.isDirectory - a.isDirectory) || (a.lmdt - b.lmdt);
-      } else {
-        return (b.isDirectory - a.isDirectory) || (b.lmdt - a.lmdt);
-      }
-    }
-
-    function sortByExtension(a, b) {
-      if (orderListAscDesc) {
-        return (b.isDirectory - a.isDirectory) || (a.extension.toString().localeCompare(b.extension));
-      } else {
-        return (b.isDirectory - a.isDirectory) || (b.extension.toString().localeCompare(a.extension));
-      }
-    }
-
-    function sortByTags(a, b) {
-      if (orderListAscDesc) {
-        return (b.isDirectory - a.isDirectory) || (a.tags.toString().localeCompare(b.tags));
-      } else {
-        return (b.isDirectory - a.isDirectory) || (b.tags.toString().localeCompare(a.tags));
-      }
-    }
-
-    switch (criteria) {
-      case "byName":
-        this.searchResults = this.searchResults.sort(sortByName);
-        break;
-      case "byFileSize":
-        this.searchResults = this.searchResults.sort(sortBySize);
-        break;
-      case "byDateModified":
-        this.searchResults = this.searchResults.sort(sortByDateModified);
-        break;
-      case "byExtension":
-        this.searchResults = this.searchResults.sort(sortByExtension);
-        break;
-      case "byTags":
-        this.searchResults = this.searchResults.sort(sortByTags);
-        break;
-      default:
-        this.searchResults = this.searchResults.sort(sortByName);
     }
   };
 
