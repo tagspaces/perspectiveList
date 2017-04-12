@@ -425,7 +425,11 @@ define(function(require, exports, module) {
       this.fileTable.find('tr').hammer().on("doubletap", function() {
         console.log("Doubletap & Opening file...");
         var titleBut = $(this).find(".fileTitleButton");
-        TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
+        if ($(titleBut).attr("isDirectory")) {
+          TSCORE.navigateToDirectory($(titleBut).attr("filepath"));
+        } else {
+          TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
+        }        
         self.selectEntry($(titleBut).attr("filepath"));
       });
     } else {
@@ -437,7 +441,6 @@ define(function(require, exports, module) {
         } else {
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
         }
-
         self.selectEntry($(titleBut).attr("filepath"));
       });
     }
