@@ -104,7 +104,7 @@ define(function(require, exports, module) {
         '</td>' +
         '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
         '<td class="byTags fileTitle forceWrap">' +
-        '{{#each tags}}' +
+        '{{#each collectedTags}}' +
           '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
           '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
         '{{/each}}' +
@@ -124,7 +124,7 @@ define(function(require, exports, module) {
         '</td>' +
         '<td class="byName fileTitle forceWrap fileTitleWidth">{{title}}</td>' +
         '<td class="byTags fileTitle forceWrap">' +
-      '{{#each tags}}' +
+      '{{#each collectedTags}}' +
           '<button class="btn btn-sm tagButton fileTagsTile" tag="{{tag}}" filepath="{{path}}" style="{{style}}">{{tag}}' +
           '<span class="fa fa-ellipsis-v dropDownIcon"></span></button>' +
       '{{/each}}' +
@@ -429,7 +429,7 @@ define(function(require, exports, module) {
           TSCORE.navigateToDirectory($(titleBut).attr("filepath"));
         } else {
           TSCORE.FileOpener.openFile($(titleBut).attr("filepath"));
-        }        
+        }
         self.selectEntry($(titleBut).attr("filepath"));
       });
     } else {
@@ -516,8 +516,6 @@ define(function(require, exports, module) {
   };
 
   ExtUI.prototype.createEntryTile = function(data, isDirectory, isSelected) {
-    //var fileParentDir = TSCORE.TagUtils.extractParentDirectoryPath(value.path);
-    //var fileName = TSCORE.TagUtils.extractFileName(value.path);
     var tmbPath = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     var metaObj = data.meta || {thumbnailPath: ""};
 
@@ -538,30 +536,32 @@ define(function(require, exports, module) {
       size: data.size,
       sizeFormat: TSCORE.TagUtils.formatFileSize(data.size, true),
       coloredExtClass: TSCORE.Config.getColoredFileExtensionsEnabled() ? "fileExtColor" : "",
+      collectedTags: [],
       tags: [],
       folder: isDirectory ? "fa fa-folder" : "",
       selected: isSelected ? "fa-check-square" : "fa-square-o",
       thumbPath: tmbPath,
-      isDirectory: isDirectory
+      isDirectory: isDirectory,
+      meta: metaObj,
     };
 
     if (data.tags && data.tags.length > 0) {
       data.tags.forEach(function(tag) {
         if((typeof tag) === 'string') {
-          context.tags.push({
+          context.collectedTags.push({
             tag: tag,
             path: data.path,
             style: TSCORE.generateTagStyle(TSCORE.Config.findTag(tag))
           });
         } else {
-          context.tags.push(tag);
+          context.collectedTags.push(tag);
         }
       });
     }
 
     if (metaObj.metaData && metaObj.metaData.tags) {
       metaObj.metaData.tags.forEach(function(elem) {
-        context.tags.push({
+        context.collectedTags.push({
           tag: elem.title,
           path: data.path,
           style: elem.style
@@ -570,7 +570,6 @@ define(function(require, exports, module) {
     }
 
     return context;
-    //return fileTileTmpl(context);
   };
 
   ExtUI.prototype.clearSelectedFiles = function() {
