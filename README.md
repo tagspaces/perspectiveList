@@ -1,3 +1,5 @@
+This repository is archived.
+
 # List Perspective for TagSpaces
 
 A TagSpaces perspective allowing you to view your files in a list. It is optimized for performing file management operation.
